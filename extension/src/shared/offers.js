@@ -8,7 +8,14 @@
  * @property {string} id                       Stable key. Used for dismissal + analytics.
  * @property {{name: string, domains: string[]}} merchant
  * @property {string} title                    Shown to the user, e.g. "20% off your order".
- * @property {{type: 'percent'|'fixed'|'shipping'|'none', value: number}} discount  'none' = attribution-only, never usable
+ * @property {Benefit} benefit             what the shopper gets out of using the code
+ *
+ * @typedef {object} Benefit
+ * @property {'percent'|'fixed'|'shipping'|'donation'|'none'} type
+ *   percent/fixed/shipping reduce what they pay. 'donation' means the code saves
+ *   them nothing but its commission funds a donation. 'none' means it saves them
+ *   nothing at all — recorded, but never usable.
+ * @property {number} value                 size of the price reduction; 0 for shipping/donation/none
  * @property {string} code                     The promo code we insert.
  * @property {string} [terms]                  Short plain-English conditions.
  * @property {{network: string, attributionMode: 'code-only'|'link', url: string|null}} affiliate
@@ -21,7 +28,7 @@
  */
 
 const ATTRIBUTION_MODES = ['code-only', 'link'];
-const DISCOUNT_TYPES = ['percent', 'fixed', 'shipping', 'none'];
+const BENEFIT_TYPES = ['percent', 'fixed', 'shipping', 'donation', 'none'];
 
 const isNonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
 const isStringArray = (v) => Array.isArray(v) && v.length > 0 && v.every(isNonEmptyString);
@@ -40,8 +47,8 @@ export function validateOffer(raw) {
   if (!isNonEmptyString(raw.title)) return { ok: false, reason: 'missing title' };
   if (!isNonEmptyString(raw.code)) return { ok: false, reason: 'missing code' };
   if (typeof raw.active !== 'boolean') return { ok: false, reason: 'active must be a boolean' };
-  if (!raw.discount || !DISCOUNT_TYPES.includes(raw.discount.type)) return { ok: false, reason: 'bad discount.type' };
-  if (typeof raw.discount.value !== 'number') return { ok: false, reason: 'discount.value must be a number' };
+  if (!raw.benefit || !BENEFIT_TYPES.includes(raw.benefit.type)) return { ok: false, reason: 'bad benefit.type' };
+  if (typeof raw.benefit.value !== 'number') return { ok: false, reason: 'benefit.value must be a number' };
   if (!raw.affiliate || !isNonEmptyString(raw.affiliate.network)) return { ok: false, reason: 'missing affiliate.network' };
   if (!ATTRIBUTION_MODES.includes(raw.affiliate.attributionMode)) return { ok: false, reason: 'bad affiliate.attributionMode' };
   if (!raw.checkout || !isStringArray(raw.checkout.urlPatterns)) return { ok: false, reason: 'missing checkout.urlPatterns' };
@@ -127,16 +134,23 @@ export function findOffersForUrl(offers, url, now = Date.now()) {
  * Does this offer give the shopper something?
  *
  * This is the line Chrome Web Store policy draws: an affiliate code may only be
- * included when it provides "a direct and transparent user benefit". A code that
- * discounts nothing is attribution-only — it earns us commission and gives the
- * shopper nothing — and inserting it is prohibited however clearly we disclose
- * it and however explicitly the user consents.
+ * included when it provides a "discount, cashback, or donation". A code that
+ * gives them none of those earns us commission for nothing, and inserting it is
+ * prohibited however clearly we disclose it and however explicitly they consent.
  *
- * See resolveAttribution() in background/affiliate.js, which refuses these.
+ * 'donation' qualifies because the donation is the benefit — which is only true
+ * while we actually keep none of it. See DONATION in shared/brand.js.
+ *
+ * See resolveAttribution() in background/affiliate.js, which refuses the rest.
  */
 export function hasUserBenefit(offer) {
-  const { type, value } = offer.discount;
+  const { type, value } = offer.benefit;
   if (type === 'none') return false;
-  if (type === 'shipping') return true;
+  if (type === 'shipping' || type === 'donation') return true;
   return typeof value === 'number' && value > 0;
+}
+
+/** A donation-funded code saves the shopper nothing, so the UI must say different things. */
+export function isDonationOffer(offer) {
+  return offer.benefit.type === 'donation';
 }

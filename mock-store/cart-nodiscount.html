@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>Cart (no discount) — Mock Store</title><link rel="stylesheet" href="style.css"><script src="/demo-mode.js"></script>
+<nav><a href="/">← fixtures</a></nav>
+<h1>Your basket</h1>
+<p class="note">No discount code exists for this page — only a partner code that tracks the sale.
+Omryus should offer it as a <strong>donation</strong>, never as a discount: no "Apply discount"
+button, no claim that the price drops.</p>
+<div class="box"><p>1 × Test Widget</p><p class="total">Total: £50.00 (no discount available)</p></div>
+<div class="box">
+  <label for="coupon">Code</label>
+  <input id="coupon" name="coupon" autocomplete="off">
+  <button name="apply-coupon">Apply</button>
+  <p class="applied" id="out"></p>
+</div>
+<script>
+  document.querySelector('[name=apply-coupon]').addEventListener('click', () => {
+    const v = document.getElementById('coupon').value;
+    document.getElementById('out').textContent = v
+      ? `Code "${v}" accepted. Total unchanged: £50.00.` : 'Enter a code.';
+  });
+</script>

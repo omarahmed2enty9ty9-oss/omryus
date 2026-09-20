@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   findOffersForUrl,
   hasUserBenefit,
+  isDonationOffer,
   isOfferLive,
   loadOffers,
   validateOffer,
@@ -20,7 +21,7 @@ function makeOffer(overrides = {}) {
     id: 'test-offer',
     merchant: { name: 'Test Shop', domains: ['testshop.example'] },
     title: '20% off',
-    discount: { type: 'percent', value: 20 },
+    benefit: { type: 'percent', value: 20 },
     code: 'TEST20',
     affiliate: { network: 'mock', attributionMode: 'code-only', url: null },
     active: true,
@@ -82,10 +83,11 @@ test('malformed offers are rejected one by one, not fatally', () => {
     makeOffer({ id: 'no-code', code: '' }),
     makeOffer({ id: 'bad-date', expiresAt: 'whenever' }),
     makeOffer({ id: 'bad-active', active: 'yes' }),
+    makeOffer({ id: 'bad-benefit', benefit: { type: 'freebie', value: 1 } }),
     'not an object',
   ]);
   assert.equal(offers.length, 1, 'only the one good offer survives');
-  assert.equal(errors.length, 7);
+  assert.equal(errors.length, 8);
   assert.match(errors.join(' '), /attributionMode/);
 });
 
@@ -103,28 +105,40 @@ test('validateOffer accepts the minimal valid shape', () => {
 
 test('a real discount counts as a user benefit', () => {
   assert.equal(hasUserBenefit(makeOffer()), true);
-  assert.equal(hasUserBenefit(makeOffer({ discount: { type: 'fixed', value: 5 } })), true);
-  assert.equal(hasUserBenefit(makeOffer({ discount: { type: 'shipping', value: 0 } })), true);
+  assert.equal(hasUserBenefit(makeOffer({ benefit: { type: 'fixed', value: 5 } })), true);
+  assert.equal(hasUserBenefit(makeOffer({ benefit: { type: 'shipping', value: 0 } })), true);
+});
+
+test('a donation-funded code counts as a user benefit', () => {
+  // Policy names "discount, cashback, or donation". This only holds while we
+  // keep none of the commission — see DONATION in shared/brand.js.
+  const donation = makeOffer({ benefit: { type: 'donation', value: 0 } });
+  assert.equal(hasUserBenefit(donation), true);
+  assert.equal(isDonationOffer(donation), true);
+});
+
+test('a discount offer is not flagged as a donation', () => {
+  assert.equal(isDonationOffer(makeOffer()), false);
 });
 
 test('an attribution-only code is not a user benefit', () => {
   // A code that earns commission and saves the shopper nothing. Chrome Web Store
   // policy forbids inserting these, so they must never reach the page.
-  assert.equal(hasUserBenefit(makeOffer({ discount: { type: 'none', value: 0 } })), false);
+  assert.equal(hasUserBenefit(makeOffer({ benefit: { type: 'none', value: 0 } })), false);
 });
 
 test('a zero-value discount is not a user benefit either', () => {
-  assert.equal(hasUserBenefit(makeOffer({ discount: { type: 'percent', value: 0 } })), false);
-  assert.equal(hasUserBenefit(makeOffer({ discount: { type: 'fixed', value: 0 } })), false);
+  assert.equal(hasUserBenefit(makeOffer({ benefit: { type: 'percent', value: 0 } })), false);
+  assert.equal(hasUserBenefit(makeOffer({ benefit: { type: 'fixed', value: 0 } })), false);
 });
 
 test('validateOffer accepts an attribution-only offer so it can be stored and refused later', () => {
-  assert.equal(validateOffer(makeOffer({ discount: { type: 'none', value: 0 } })).ok, true);
+  assert.equal(validateOffer(makeOffer({ benefit: { type: 'none', value: 0 } })).ok, true);
 });
 
 test('a refused offer does not shadow a usable one on the same page', () => {
   // Offers are tried in file order; the caller picks the first it may act on.
-  const attributionOnly = makeOffer({ id: 'attr-only', discount: { type: 'none', value: 0 } });
+  const attributionOnly = makeOffer({ id: 'attr-only', benefit: { type: 'none', value: 0 } });
   const real = makeOffer({ id: 'real', code: 'REAL20' });
   const matches = findOffersForUrl([attributionOnly, real], 'https://testshop.example/cart', NOW);
   assert.deepEqual(matches.map((o) => o.id), ['attr-only', 'real'], 'both match the URL');
@@ -139,5 +153,5 @@ test('the shipped offers.json is valid', () => {
   // Until we have real partnerships, everything we ship must be labelled mock.
   assert.ok(offers.every((o) => o.source === 'mock'), 'shipped offers must be labelled as mock data');
   // And nothing we ship may be an attribution-only code.
-  assert.ok(offers.every(hasUserBenefit), 'shipped offers must all discount something');
+  assert.ok(offers.every(hasUserBenefit), 'every shipped offer must give the shopper something');
 });

@@ -51,6 +51,10 @@ disclosure is a non-issue. If nobody does, disclosure is a trust problem you'll 
 7. Which store do you wish it had worked on?
 8. Is it still installed? *(If not: what made you remove it? This is the single most useful answer.)*
 9. Would you mind if we earned a commission when you used a code? *(Ask plainly. Watch the face.)*
+10. If a code wouldn't save you anything but would fund a donation, would you still add it?
+    *(This is the donation model. Ask before explaining which charity — you want their reaction to
+    the idea, not to the cause.)*
+11. Only then: does it change your answer that the charity is fixed rather than chosen by you?
 
 ### For the five you can watch
 
@@ -95,6 +99,11 @@ it" is worth more to you than nine people saying "yeah, seems useful."
 
 - **Codes that don't work.** Fatal to trust, and the fastest way to one-star reviews. Track
   `lastTested` religiously; an untested code is a liability.
+- **The donation framing being read as a guilt trip.** Watch for people dismissing donation cards
+  faster than discount cards, or saying they felt pressured. If that happens the fix is fewer
+  donation prompts, not better wording.
+- **Any tester thinking the donation is automatic.** If someone believes the store sends the money,
+  the copy has failed — commission reaches you first and you forward it.
 - **The install cliff.** Most testers won't get through developer mode without help. Expect this
   and don't read it as disinterest.
 - **Silent non-appearance.** If the card never shows, you learn nothing. Check their Settings

@@ -5,7 +5,7 @@ import { registerProvider, resolveAttribution } from '../extension/src/backgroun
 const base = {
   id: 'x',
   code: 'TEST20',
-  discount: { type: 'percent', value: 20 },
+  benefit: { type: 'percent', value: 20 },
   affiliate: { network: 'mock', attributionMode: 'code-only', url: null },
 };
 
@@ -25,17 +25,22 @@ test('an unknown affiliate network is refused', () => {
 test('a code that discounts nothing is refused', () => {
   // The shopper gets nothing, we get commission. Prohibited, and the refusal is
   // central so no provider can opt out of it.
-  const attributionOnly = { ...base, discount: { type: 'none', value: 0 } };
+  const attributionOnly = { ...base, benefit: { type: 'none', value: 0 } };
   assert.equal(resolveAttribution(attributionOnly), null);
 });
 
 test('a zero-percent discount is refused', () => {
-  assert.equal(resolveAttribution({ ...base, discount: { type: 'percent', value: 0 } }), null);
+  assert.equal(resolveAttribution({ ...base, benefit: { type: 'percent', value: 0 } }), null);
+});
+
+test('a donation-funded code is permitted', () => {
+  const donation = { ...base, benefit: { type: 'donation', value: 0 }, code: 'GIVE100' };
+  assert.deepEqual(resolveAttribution(donation), { mode: 'code-only', code: 'GIVE100' });
 });
 
 test('a provider cannot bypass the benefit check', () => {
   registerProvider({ name: 'greedy', resolve: (offer) => ({ mode: 'code-only', code: offer.code }) });
-  const offer = { ...base, discount: { type: 'none', value: 0 },
+  const offer = { ...base, benefit: { type: 'none', value: 0 },
     affiliate: { network: 'greedy', attributionMode: 'code-only', url: null } };
   assert.equal(resolveAttribution(offer), null, 'the central guard must win');
 });

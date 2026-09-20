@@ -15,7 +15,8 @@ Working name: **Omryus**. To rename it, edit `extension/src/shared/brand.js` and
 
 1. You open a cart or checkout page on a store we support.
 2. A small card appears bottom-right: *"20% off your order — we have a partner code for this store."*
-3. You click **Apply discount** (or **Dismiss**, which closes the card for that page).
+3. You click **Apply discount** — or **Add the code**, if it's a donation-funded code that won't
+   lower your price. (Or **Dismiss**, which closes the card for that page.)
 4. The extension finds the discount box, puts the code in, and fires the events frameworks need.
 5. If it can't find the box, it shows you the code to paste in yourself.
 
@@ -110,7 +111,7 @@ extension/src/
   "id": "mockstore-autumn-2026",              // stable — used for dismissals and counters
   "merchant": { "name": "Mock Store", "domains": ["mockstore.example"] },
   "title": "20% off your order",              // shown to the user
-  "discount": { "type": "percent", "value": 20 },   // percent | fixed | shipping | none
+  "benefit": { "type": "percent", "value": 20 },   // what the shopper gets — see below
   "code": "MOCK20",
   "terms": "Short plain-English conditions.",
   "affiliate": {
@@ -135,20 +136,54 @@ extension/src/
 An entry that fails validation is **skipped with a warning**, not fatal — one typo can't take down
 every other merchant. The rules live in `extension/src/shared/offers.js`.
 
-### Codes that don't discount anything
+### `benefit` — what the shopper gets
 
-Some affiliate programmes issue a code that tracks attribution but saves the shopper nothing.
-The schema can hold one (`"discount": { "type": "none", "value": 0 }`) so you can record it, but
-**it will never be shown or inserted.** `resolveAttribution()` refuses any offer that fails
-`hasUserBenefit()`, and the check sits above the provider so no future network integration can
-skip it.
+| `type` | Means | Usable? |
+|---|---|---|
+| `percent` / `fixed` | Price reduction. `value` must be > 0 | yes |
+| `shipping` | Free or reduced delivery | yes |
+| `donation` | **No price reduction.** The commission funds a donation | yes |
+| `none` | Nothing at all. Recorded, never used | **refused** |
 
-That isn't caution, it's the rule: Chrome Web Store policy permits an affiliate code only when it
-gives "a direct and transparent user benefit", and the 2025 update names this exact case — a
-coupon extension "must not insert an affiliate link if no coupon or discount is found". Disclosure
-and an explicit click don't substitute for the benefit; all three are required. A code carrying
-free shipping, a gift or cashback **is** a benefit and works normally — it's specifically the
-zero-value ones that are refused.
+Chrome Web Store policy permits inserting an affiliate code only where the shopper gets a
+"discount, cashback, or donation". `resolveAttribution()` refuses anything failing
+`hasUserBenefit()`, and that check sits **above** the provider lookup so no future network
+integration can skip it.
+
+### Donation-funded codes
+
+Some programmes issue a code that tracks the sale but saves the shopper nothing. Rather than
+waste them or dress them up as savings, they are offered as donations: the card says plainly that
+the price will not change, names the charity, and the button reads "Add the code" — never
+"Apply discount". There are tests asserting exactly that, because it is the detail that would sink
+a store review.
+
+The recipient is one value in `extension/src/shared/brand.js`:
+
+```js
+export const DONATION = {
+  charity: 'Medical Aid for Palestinians',
+  url: 'https://www.map.org.uk/',
+  share: 1, // fraction of commission donated. 1 = all of it.
+};
+```
+
+**Three things this depends on, none of which are code:**
+
+1. **You have to actually forward the money.** Commission lands in your account; nothing transfers
+   automatically. The extension states this as a pledge, so publish what was sent — a dated list
+   on the site is enough, and it is the only thing that makes the claim verifiable.
+2. **`share` should stay at 1.** The donation is what makes these codes permissible. The more of it
+   you keep, the closer it gets to the thing the policy prohibits, and "we donate some of it" is a
+   much weaker argument than "we keep none of it".
+3. **The affiliate programme has to allow it.** Inserting a tracking-only code at checkout is the
+   pattern merchants call commission hijacking, and plenty of networks ban extension publishers
+   for it regardless of what Chrome permits. Ask before you build a flow around it.
+
+One known trade-off: the cause is fixed rather than chosen by the shopper. That is a deliberate
+choice, but it is the weaker version of the compliance argument — "a donation the user selected"
+is easier to defend than "a donation we selected". If a reviewer pushes back, offering a short
+list of causes in Settings is the fix.
 
 ### Adding a merchant
 
@@ -214,8 +249,8 @@ merchant detection, lookalike domains, wrong-page suppression, active offers, ex
 not-yet-started offers, deactivated offers, malformed offer data, dismissal expiry, code insertion
 into plain and controlled (React/Vue-style) inputs, missing fields, dynamically appearing fields,
 shadow-DOM fields, refusal to touch password and card fields, duplicate notification suppression,
-the affiliate provider's refusal of unsupported modes and of zero-benefit codes, and HTML escaping
-of offer data.
+the affiliate provider's refusal of unsupported modes and of zero-benefit codes, donation-funded
+codes never being described as discounts, and HTML escaping of offer data.
 
 `mock-store/` holds six checkout fixtures for manual testing — static, controlled-input,
 late-rendering, shadow DOM, no-coupon-box, and a non-cart page that should stay quiet.
@@ -251,6 +286,8 @@ Update `privacyUrl` and `siteUrl` in `extension/src/shared/brand.js` once you ha
 ## Chrome Web Store publishing checklist
 
 - [ ] Replace every mock offer with a real one from a programme you have actually joined
+- [ ] Confirm the charity in `brand.js` is registered, named correctly, and accepts this
+- [ ] Publish the donation ledger on the site before claiming donations in the listing
 - [ ] Set `source: "partner"` only on offers backed by a real agreement
 - [ ] Host the privacy policy at a real URL and update `brand.js`
 - [ ] Listing description states the affiliate relationship **before install** (policy requirement)

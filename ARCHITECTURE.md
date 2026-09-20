@@ -69,13 +69,19 @@ things. Each maps to a specific place in the code:
 |---|---|
 | Disclosed before install, in the listing, and in the UI | Card footer, popup, options page, landing page |
 | Related user action before *each* affiliate code | The code only leaves the worker in response to `APPLY_OFFER` |
-| Real user benefit at that moment, tied to core purpose | `resolveAttribution()` refuses any offer failing `hasUserBenefit()` — a code that discounts nothing never reaches the page |
+| Real user benefit at that moment, tied to core purpose | `resolveAttribution()` refuses any offer failing `hasUserBenefit()`. Policy names "discount, cashback, or donation" — so a no-discount code is only usable as a donation, and the UI must not call it a discount |
 | Data collection strictly necessary to a single purpose | No network calls exist. Counters are local and can be switched off |
 | No remotely hosted code (MV3) | `npm run build` bundles everything. Remote *data* is allowed later; remote code never |
 
 **The benefit check is deliberately central**, above the provider lookup, so adding a real
-affiliate network cannot accidentally re-open the zero-discount case. A programme offering a
-tracking-only code is one we decline, not one we quietly pass through with a disclosure.
+affiliate network cannot accidentally re-open the zero-benefit case.
+
+A tracking-only code is not simply declined — it is offered as a **donation**, which policy lists
+as a qualifying benefit alongside discounts and cashback. That argument only holds while we keep
+none of the commission (`DONATION.share === 1` in `shared/brand.js`), and while the UI never
+describes such a code as a saving. Both the copy and the button label branch on `isDonation`, and
+there are tests asserting a donation card never says "discount" — that wording is the detail a
+store reviewer would catch.
 
 **Not overwriting other people's attribution** isn't policed by a check — it's structural.
 `code-only` attribution can't overwrite a cookie or a referral parameter because it never

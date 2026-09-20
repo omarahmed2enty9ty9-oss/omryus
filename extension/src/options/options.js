@@ -1,4 +1,11 @@
 import { EVENTS, getCounts, reset } from '../background/analytics.js';
+import { DONATION } from '../shared/brand.js';
+
+// Named in one place (shared/brand.js) so the cause can be changed without
+// hunting through copy.
+const charityLink = document.getElementById('charity-link');
+charityLink.textContent = DONATION.charity;
+charityLink.href = DONATION.url;
 
 const checkbox = document.getElementById('analytics');
 const countsEl = document.getElementById('counts');

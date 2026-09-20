@@ -5,7 +5,7 @@
  * cannot break the store. It never covers the page, never blocks clicks
  * elsewhere, and always has a dismiss button.
  */
-import { BRAND, DOM_PREFIX } from '../shared/brand.js';
+import { BRAND, DOM_PREFIX, DONATION } from '../shared/brand.js';
 
 const HOST_ID = `${DOM_PREFIX}-offer-card`;
 
@@ -77,6 +77,16 @@ export function showCard(offer, { onApply, onDismiss }) {
     const tested = offer.lastTested ? `Code last checked ${escapeHtml(offer.lastTested)}. ` : '';
 
     if (state === 'offer') {
+      // A donation-funded code saves the shopper nothing, so it must never be
+      // described as a discount — not in the wording, not on the button.
+      const body = offer.isDonation
+        ? `<p>This code won’t lower your price. If you use it, we donate every penny of
+             the commission to ${escapeHtml(DONATION.charity)} and keep none of it.</p>`
+        : `<p>We have a partner code for ${escapeHtml(offer.merchantName)}.</p>`;
+      const disclosure = offer.isDonation
+        ? `We earn a commission from ${escapeHtml(offer.merchantName)} and pass 100% of it on.`
+        : `Using this code supports ${BRAND.name}, at no extra cost to you.`;
+
       card.innerHTML = `
         <button class="close" aria-label="Close">&times;</button>
         ${mockBadge}
@@ -84,14 +94,13 @@ export function showCard(offer, { onApply, onDismiss }) {
           <span class="dot"></span>
           <div>
             <h1>${escapeHtml(offer.title)}</h1>
-            <p>We have a partner code for ${escapeHtml(offer.merchantName)}.</p>
+            ${body}
           </div>
         </div>
-        <div class="meta">${tested}${escapeHtml(offer.terms)} Using this code supports ${BRAND.name},
-          at no extra cost to you.</div>
+        <div class="meta">${tested}${escapeHtml(offer.terms)} ${disclosure}</div>
         <div class="actions">
-          <button class="apply">Apply discount</button>
-          <button class="dismiss">Dismiss</button>
+          <button class="apply">${offer.isDonation ? 'Add the code' : 'Apply discount'}</button>
+          <button class="dismiss">${offer.isDonation ? 'No thanks' : 'Dismiss'}</button>
         </div>`;
       card.querySelector('.apply').addEventListener('click', onApply);
       card.querySelector('.dismiss').addEventListener('click', onDismiss);
@@ -106,13 +115,18 @@ export function showCard(offer, { onApply, onDismiss }) {
     }
 
     if (state === 'success') {
+      const next = offer.isDonation
+        ? (data.clicked ? 'We pressed Apply for you.' : 'Press the store’s Apply button to confirm it.')
+        : (data.clicked ? 'We pressed Apply for you — the store confirms the discount.' : 'Press the store’s Apply button to confirm it.');
+      const thanks = offer.isDonation
+        ? `<p class="meta">Thank you — your order now funds a donation to ${escapeHtml(DONATION.charity)}.</p>`
+        : '';
       card.innerHTML = `
         <button class="close" aria-label="Close">&times;</button>
         <div class="row"><span class="dot"></span><div>
           <h1>Code inserted</h1>
-          <p><code>${escapeHtml(data.code)}</code> is in the discount box. ${escapeHtml(
-            data.clicked ? 'We pressed Apply for you — the store confirms the discount.' : 'Press the store’s Apply button to confirm it.',
-          )}</p>
+          <p><code>${escapeHtml(data.code)}</code> is in the code box. ${escapeHtml(next)}</p>
+          ${thanks}
         </div></div>`;
       card.querySelector('.close').addEventListener('click', remove);
       return;

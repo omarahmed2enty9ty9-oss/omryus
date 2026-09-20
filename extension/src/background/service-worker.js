@@ -6,7 +6,7 @@
  * the code?". Keeping the rules here means swapping offers.json for an API
  * later does not touch any page-facing code.
  */
-import { findOffersForUrl } from '../shared/offers.js';
+import { findOffersForUrl, isDonationOffer } from '../shared/offers.js';
 import { LocalOfferSource } from './offer-source.js';
 import { resolveAttribution } from './affiliate.js';
 import { track } from './analytics.js';
@@ -20,8 +20,8 @@ chrome.runtime.onInstalled.addListener((details) => {
 /**
  * Find a usable offer for a URL, or null.
  * "Usable" also means we have an affiliate provider that permits it — an offer
- * we are not authorised to act on, including one that discounts nothing, is
- * treated as if it did not exist.
+ * we are not authorised to act on, including one that gives the shopper nothing,
+ * is treated as if it did not exist.
  */
 async function getUsableOffer(url) {
   const offers = await offerSource.getOffers();
@@ -40,6 +40,7 @@ function toCardData(offer) {
     id: offer.id,
     merchantName: offer.merchant.name,
     title: offer.title,
+    isDonation: isDonationOffer(offer),
     terms: offer.terms ?? '',
     source: offer.source,
     lastTested: offer.lastTested ?? null,

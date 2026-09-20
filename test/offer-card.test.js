@@ -8,10 +8,14 @@ const OFFER = {
   id: 'test-offer',
   merchantName: 'Test Shop',
   title: '20% off',
+  isDonation: false,
   terms: 'Mock data.',
   source: 'mock',
   lastTested: '2026-09-20',
 };
+
+/** Same offer, but the code saves the shopper nothing and funds a donation. */
+const DONATION_OFFER = { ...OFFER, title: 'Fund a donation with your order', isDonation: true };
 
 const noop = () => {};
 
@@ -97,6 +101,35 @@ test('offer text from data is escaped, never injected as HTML', () => {
   showCard({ ...OFFER, title: '<img src=x onerror=alert(1)>' }, { onApply: noop, onDismiss: noop });
   const shadow = document.getElementById(HOST_ID).shadowRoot;
   assert.equal(shadow.querySelector('img'), null, 'offer data must not become live markup');
+});
+
+test('a donation offer is never described as a discount', () => {
+  showCard(DONATION_OFFER, { onApply: noop, onDismiss: noop });
+  const shadow = document.getElementById(HOST_ID).shadowRoot;
+  assert.doesNotMatch(shadow.querySelector('.apply').textContent, /discount/i,
+    'the button must not promise a discount');
+  assert.match(shadow.textContent, /won’t lower your price/i,
+    'must say plainly that the price does not change');
+});
+
+test('a donation offer names the charity and says we keep none of it', () => {
+  showCard(DONATION_OFFER, { onApply: noop, onDismiss: noop });
+  const text = document.getElementById(HOST_ID).shadowRoot.textContent;
+  assert.match(text, /Medical Aid for Palestinians/, 'must name where the money goes');
+  assert.match(text, /keep none of it|100%/i, 'must say we keep none of the commission');
+});
+
+test('a donation offer thanks the shopper without claiming a saving', () => {
+  const card = showCard(DONATION_OFFER, { onApply: noop, onDismiss: noop });
+  card.setState('success', { code: 'GIVE100', clicked: true });
+  const text = document.getElementById(HOST_ID).shadowRoot.textContent;
+  assert.match(text, /funds a donation/i);
+  assert.doesNotMatch(text, /confirms the discount/i, 'there is no discount to confirm');
+});
+
+test('a discount offer still says discount', () => {
+  showCard(OFFER, { onApply: noop, onDismiss: noop });
+  assert.match(document.getElementById(HOST_ID).shadowRoot.querySelector('.apply').textContent, /discount/i);
 });
 
 test('lives in a shadow root so the store CSS cannot reach it', () => {

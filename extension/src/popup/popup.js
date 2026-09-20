@@ -6,7 +6,7 @@
  * If nothing answers, the site is not one we support — and we never learn what
  * site it was.
  */
-import { BRAND } from '../shared/brand.js';
+import { BRAND, DONATION } from '../shared/brand.js';
 
 const statusEl = document.getElementById('status');
 
@@ -17,13 +17,16 @@ function renderUnsupported() {
 
 function renderOffer(offer) {
   const badge = offer.source === 'mock' ? '<div class="badge">MOCK OFFER — DEMO DATA</div>' : '';
+  const body = offer.isDonation
+    ? `This code won't lower your price. We donate 100% of the commission to ${DONATION.charity}.`
+    : `Partner code available for ${offer.merchantName}.`;
   statusEl.innerHTML = `${badge}
     <h1>${offer.title}</h1>
-    <p class="muted">Partner code available for ${offer.merchantName}.</p>
-    <button id="apply">Apply discount</button>`;
+    <p class="muted">${body}</p>
+    <button id="apply">${offer.isDonation ? 'Add the code' : 'Apply discount'}</button>`;
   document.getElementById('apply').addEventListener('click', async (event) => {
     event.target.disabled = true;
-    event.target.textContent = 'Applying…';
+    event.target.textContent = 'Adding…';
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     await chrome.tabs.sendMessage(tab.id, { type: 'POPUP_APPLY' });
     window.close();

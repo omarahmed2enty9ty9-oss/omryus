@@ -1,17 +1,69 @@
 [
   {
+    "id": "localhost-donation-fixture",
+    "merchant": {
+      "name": "Mock Store (local)",
+      "domains": [
+        "localhost"
+      ]
+    },
+    "title": "Fund a donation with your order",
+    "benefit": {
+      "type": "donation",
+      "value": 0
+    },
+    "code": "GIVE100",
+    "terms": "Local development fixture.",
+    "affiliate": {
+      "network": "mock",
+      "attributionMode": "code-only",
+      "url": null
+    },
+    "active": true,
+    "expiresAt": "2030-01-01T00:00:00Z",
+    "checkout": {
+      "urlPatterns": [
+        "*/cart-nodiscount*"
+      ],
+      "fieldSelectors": [
+        "input[name='coupon']",
+        "#promo-code"
+      ],
+      "applyButtonSelectors": [
+        "button[name='apply-coupon']"
+      ]
+    },
+    "lastTested": "2026-09-20",
+    "source": "mock"
+  },
+  {
     "id": "mockstore-autumn-2026",
-    "merchant": { "name": "Mock Store", "domains": ["mockstore.example"] },
+    "merchant": {
+      "name": "Mock Store",
+      "domains": [
+        "mockstore.example"
+      ]
+    },
     "title": "20% off your order",
-    "discount": { "type": "percent", "value": 20 },
+    "benefit": {
+      "type": "percent",
+      "value": 20
+    },
     "code": "MOCK20",
-    "terms": "Mock data — Omryus has no partnership with any store yet.",
-    "affiliate": { "network": "mock", "attributionMode": "code-only", "url": null },
+    "terms": "Mock data \u2014 Omryus has no partnership with any store yet.",
+    "affiliate": {
+      "network": "mock",
+      "attributionMode": "code-only",
+      "url": null
+    },
     "active": true,
     "startsAt": "2026-01-01T00:00:00Z",
     "expiresAt": "2027-01-01T00:00:00Z",
     "checkout": {
-      "urlPatterns": ["*/cart*", "*/checkout*"],
+      "urlPatterns": [
+        "*/cart*",
+        "*/checkout*"
+      ],
       "fieldSelectors": [
         "input[name='coupon']",
         "input[name='promo']",
@@ -19,49 +71,90 @@
         "#promo-code",
         "input[data-testid='coupon-input']"
       ],
-      "applyButtonSelectors": ["button[name='apply-coupon']", "#apply-promo"],
-      "successSelectors": [".discount-applied"]
+      "applyButtonSelectors": [
+        "button[name='apply-coupon']",
+        "#apply-promo"
+      ],
+      "successSelectors": [
+        ".discount-applied"
+      ]
     },
     "lastTested": "2026-09-20",
     "source": "mock"
   },
   {
     "id": "localhost-dev-fixture",
-    "merchant": { "name": "Mock Store (local)", "domains": ["localhost"] },
+    "merchant": {
+      "name": "Mock Store (local)",
+      "domains": [
+        "localhost"
+      ]
+    },
     "title": "20% off your order",
-    "discount": { "type": "percent", "value": 20 },
+    "benefit": {
+      "type": "percent",
+      "value": 20
+    },
     "code": "MOCK20",
     "terms": "Local development fixture.",
-    "affiliate": { "network": "mock", "attributionMode": "code-only", "url": null },
+    "affiliate": {
+      "network": "mock",
+      "attributionMode": "code-only",
+      "url": null
+    },
     "active": true,
     "expiresAt": "2030-01-01T00:00:00Z",
     "checkout": {
-      "urlPatterns": ["*/cart*", "*/checkout*"],
+      "urlPatterns": [
+        "*/cart*",
+        "*/checkout*"
+      ],
       "fieldSelectors": [
         "input[name='coupon']",
         "input[name='promo']",
         "#promo-code",
         "input[data-testid='coupon-input']"
       ],
-      "applyButtonSelectors": ["button[name='apply-coupon']", "#apply-promo"],
-      "successSelectors": [".discount-applied"]
+      "applyButtonSelectors": [
+        "button[name='apply-coupon']",
+        "#apply-promo"
+      ],
+      "successSelectors": [
+        ".discount-applied"
+      ]
     },
     "lastTested": "2026-09-20",
     "source": "mock"
   },
   {
     "id": "expired-example-2025",
-    "merchant": { "name": "Expired Example", "domains": ["expired.example"] },
+    "merchant": {
+      "name": "Expired Example",
+      "domains": [
+        "expired.example"
+      ]
+    },
     "title": "15% off (expired)",
-    "discount": { "type": "percent", "value": 15 },
+    "benefit": {
+      "type": "percent",
+      "value": 15
+    },
     "code": "OLD15",
     "terms": "Mock data. Kept here to show how expiry works.",
-    "affiliate": { "network": "mock", "attributionMode": "code-only", "url": null },
+    "affiliate": {
+      "network": "mock",
+      "attributionMode": "code-only",
+      "url": null
+    },
     "active": true,
     "expiresAt": "2025-12-31T23:59:59Z",
     "checkout": {
-      "urlPatterns": ["*/cart*"],
-      "fieldSelectors": ["input[name='coupon']"]
+      "urlPatterns": [
+        "*/cart*"
+      ],
+      "fieldSelectors": [
+        "input[name='coupon']"
+      ]
     },
     "lastTested": "2025-11-01",
     "source": "mock"
