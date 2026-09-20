@@ -2,19 +2,21 @@
    Palette mirrors PALETTE in extension/src/shared/brand.js. */
 
 :root {
-  --ink: #14121f;
-  --ink-soft: #4a4760;
-  --ink-faint: #85819a;
-  --brand: #5b4bff;
-  --brand-deep: #3a2bd6;
-  --brand-wash: #f0eeff;
-  --sand: #f7f0e4;
-  --sand-ink: #7a5a18;
-  --paper: #fffdfb;
+  --ink: #12233b;
+  --ink-soft: #4a5a6e;
+  --ink-faint: #7c8b9b;
+  --brand: #12233b;          /* navy — primary actions, from the wordmark */
+  --brand-deep: #0e2138;
+  --brand-wash: #e8eef2;
+  --accent: #fca429;         /* amber — the sparkle in the mark */
+  --sand: #fdf1dc;
+  --sand-ink: #8a5a08;
+  --on-brand: #ffffff;
+  --paper: #f4f9fa;
   --surface: #ffffff;
-  --line: #e9e6f0;
-  --shadow: 0 1px 2px rgba(20, 18, 31, .04), 0 12px 32px -8px rgba(20, 18, 31, .10);
-  --shadow-lg: 0 2px 4px rgba(20, 18, 31, .04), 0 24px 56px -12px rgba(20, 18, 31, .18);
+  --line: #dce6ea;
+  --shadow: 0 1px 2px rgba(14, 33, 56, .05), 0 12px 32px -8px rgba(14, 33, 56, .12);
+  --shadow-lg: 0 2px 4px rgba(14, 33, 56, .05), 0 24px 56px -12px rgba(14, 33, 56, .22);
   --radius: 16px;
   --display: "Instrument Serif", Georgia, "Times New Roman", serif;
   --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -23,19 +25,23 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #f3f1fa;
-    --ink-soft: #b3aecb;
-    --ink-faint: #837e9c;
-    --brand: #8577ff;
-    --brand-deep: #a79bff;
-    --brand-wash: #1d1936;
-    --sand: #2a2313;
-    --sand-ink: #e6c97e;
-    --paper: #0d0c14;
-    --surface: #16141f;
-    --line: #272336;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 12px 32px -8px rgba(0, 0, 0, .5);
-    --shadow-lg: 0 2px 4px rgba(0, 0, 0, .3), 0 24px 56px -12px rgba(0, 0, 0, .6);
+    --ink: #eaf1f5;
+    --ink-soft: #a4b5c4;
+    --ink-faint: #74869a;
+    /* Navy is invisible on navy, so the primary action inverts to near-white.
+       Amber stays the accent in both themes. */
+    --brand: #eaf1f5;
+    --brand-deep: #ffffff;
+    --brand-wash: #17293f;
+    --accent: #fcb04a;
+    --sand: #2e2413;
+    --sand-ink: #f0c680;
+    --on-brand: #0b1728;
+    --paper: #0b1728;
+    --surface: #12213a;
+    --line: #23364f;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 12px 32px -8px rgba(0, 0, 0, .55);
+    --shadow-lg: 0 2px 4px rgba(0, 0, 0, .35), 0 24px 56px -12px rgba(0, 0, 0, .65);
   }
 }
 
@@ -70,10 +76,16 @@ header {
 header.stuck { border-bottom-color: var(--line); }
 header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
 .logo {
-  display: inline-flex; align-items: center; gap: 10px;
-  font-family: var(--display); font-size: 21px; color: var(--ink); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 9px;
+  font: 600 19px/1 var(--sans); letter-spacing: .015em; text-transform: uppercase;
+  color: var(--ink); text-decoration: none;
 }
-.logo img { border-radius: 7px; }
+footer .logo { align-items: flex-start; }
+footer .logo img { margin-top: 1px; }
+.logo .tagline {
+  display: block; margin-top: 5px;
+  font: 500 9.5px/1 var(--sans); letter-spacing: .22em; color: var(--ink-faint);
+}
 nav { display: flex; align-items: center; gap: 26px; }
 nav a { font-size: 14.5px; color: var(--ink-soft); text-decoration: none; }
 nav a:hover { color: var(--ink); }
@@ -85,8 +97,8 @@ nav a:hover { color: var(--ink); }
   display: inline-flex; align-items: center; gap: 9px;
   padding: 13px 22px; border-radius: 11px;
   font: 500 15px/1 var(--sans); text-decoration: none;
-  background: var(--brand); color: #fff;
-  box-shadow: 0 1px 2px rgba(20,18,31,.1), 0 8px 20px -6px color-mix(in srgb, var(--brand) 55%, transparent);
+  background: var(--brand); color: var(--on-brand);
+  box-shadow: 0 1px 2px rgba(14,33,56,.12), 0 8px 20px -6px color-mix(in srgb, var(--brand) 45%, transparent);
   transition: transform .15s ease, background .15s ease;
 }
 .btn:hover { background: var(--brand-deep); transform: translateY(-1px); }
@@ -110,8 +122,8 @@ nav a:hover { color: var(--ink); }
 section { padding: 76px 0; }
 .eyebrow {
   display: inline-block; margin-bottom: 14px;
-  font: 500 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--brand);
+  font: 600 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase;
+  color: var(--sand-ink);
 }
 h2 { font-size: clamp(30px, 4vw, 40px); margin: 0 0 14px; line-height: 1.15; }
 .lede { font-size: 18.5px; color: var(--ink-soft); max-width: 58ch; }
@@ -121,7 +133,7 @@ h2 { font-size: clamp(30px, 4vw, 40px); margin: 0 0 14px; line-height: 1.15; }
 .hero { padding: 64px 0 88px; position: relative; overflow: hidden; }
 .hero::before {
   content: ""; position: absolute; inset: -40% 20% auto -20%; height: 620px;
-  background: radial-gradient(ellipse at 30% 40%, color-mix(in srgb, var(--brand) 16%, transparent), transparent 62%);
+  background: radial-gradient(ellipse at 30% 40%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%);
   pointer-events: none;
 }
 .hero .wrap { position: relative; display: grid; gap: 64px; grid-template-columns: 1.05fr .95fr; align-items: center; }
@@ -169,14 +181,14 @@ h1 { font-size: clamp(44px, 6.2vw, 68px); line-height: 1.04; margin: 0 0 20px; }
   background: var(--sand); color: var(--sand-ink); font: 600 10.5px/1 var(--sans); letter-spacing: .04em;
 }
 .card-head { display: flex; gap: 10px; align-items: flex-start; }
-.card .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand); margin-top: 6px; flex: none; }
+.card .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex: none; }
 .card h3 { font-family: var(--sans); font-weight: 600; font-size: 15px; margin: 0 0 3px; letter-spacing: 0; }
 .card p { font-size: 13px; color: var(--ink-soft); margin: 0; }
 .card .meta { margin-top: 10px; font-size: 11px; line-height: 1.5; color: var(--ink-faint); }
 .card .actions { display: flex; gap: 8px; margin-top: 15px; }
 .card .actions span {
   padding: 9px 14px; border-radius: 9px; font: 500 13px/1 var(--sans);
-  background: var(--brand); color: #fff; flex: 1; text-align: center;
+  background: var(--brand); color: var(--on-brand); flex: 1; text-align: center;
 }
 .card .actions span.sec { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); flex: none; }
 
@@ -197,7 +209,7 @@ h1 { font-size: clamp(44px, 6.2vw, 68px); line-height: 1.04; margin: 0 0 20px; }
 }
 .step h3 { font-family: var(--sans); font-size: 17px; font-weight: 600; margin: 6px 0 5px; letter-spacing: 0; }
 .step p { color: var(--ink-soft); font-size: 15.5px; margin: 0; }
-.step.key::before { background: var(--brand); color: #fff; }
+.step.key::before { background: var(--accent); color: #0e2138; }
 
 /* ---------- trust columns ---------- */
 
@@ -263,7 +275,7 @@ footer nav { gap: 22px; }
 .doc p, .doc li { color: var(--ink-soft); }
 .doc ul { padding-left: 0; list-style: none; }
 .doc ul li { padding: 7px 0 7px 26px; position: relative; }
-.doc ul li::before { content: ""; position: absolute; left: 6px; top: 16px; width: 5px; height: 5px; border-radius: 50%; background: var(--brand); }
+.doc ul li::before { content: ""; position: absolute; left: 6px; top: 16px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 .doc .stamp { color: var(--ink-faint); font-size: 14px; margin-bottom: 36px; }
 .doc code { font: 13.5px var(--mono); background: var(--brand-wash); padding: 2px 6px; border-radius: 5px; color: var(--ink); }
 table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }

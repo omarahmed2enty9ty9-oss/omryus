@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Omryus">
+  <!-- Magnifier lens -->
+  <circle cx="55" cy="78" r="27.5" fill="#F4F9FA"/>
+
+  <!-- Sparkle: a find, not a search -->
+  <path d="M56 57 Q59 75 76 78 Q59 81 56 99 Q53 81 36 78 Q53 75 56 57 Z" fill="#FCA429"/>
+
+  <!-- Lens ring + handle -->
+  <circle cx="55" cy="78" r="27.5" fill="none" stroke="#0E2138" stroke-width="10.5"/>
+  <line x1="77" y1="99" x2="101" y2="121" stroke="#0E2138" stroke-width="13" stroke-linecap="round"/>
+
+  <!-- Hat, tilted over the lens -->
+  <g transform="rotate(-13 60 44)">
+    <path d="M29 48 C29 27 35 14 49 14 C57 14 59 23 66 23 C74 23 76 14 82 14 C92 14 94 31 94 48 Z" fill="#495C6A"/>
+    <path d="M29 42 C41 46 52 47 61.5 47 C71 47 83 46 94 42 L94 48 L29 48 Z" fill="#2B3A4C"/>
+    <rect x="14" y="43.5" width="96" height="10" rx="5" fill="#0E2138"/>
+  </g>
+</svg>

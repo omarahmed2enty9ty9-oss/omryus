@@ -4,8 +4,9 @@ export const BRAND = {
   name: 'Omryus',
   tagline: 'Find discounts while you shop.',
   // Used for the injected UI and the icons. The site mirrors these in style.css.
-  color: '#5B4BFF',
-  colorDark: '#3B2FCC',
+  color: '#12233B',      // navy — primary actions
+  colorDark: '#0E2138',  // navy, pressed
+  accent: '#FCA429',     // amber — the sparkle in the mark
   supportEmail: 'support@omryus.example',
   privacyUrl: 'https://omryus.example/privacy.html',
   siteUrl: 'https://omryus.example',
@@ -19,14 +20,15 @@ export const BRAND = {
  * not like an advert. The marketing site is where the brand has personality.
  */
 export const PALETTE = {
-  ink: '#14121F',
-  inkSoft: '#4A4760',
-  brand: '#5B4BFF',
-  brandDeep: '#3A2BD6',
-  sand: '#F7F0E4',
-  sandInk: '#7A5A18',
-  paper: '#FFFDFB',
-  line: '#E9E6F0',
+  ink: '#12233B',
+  inkSoft: '#4A5A6E',
+  navy: '#0E2138',
+  slate: '#495C6A',
+  accent: '#FCA429',
+  accentWash: '#FDF1DC',
+  accentInk: '#8A5A08',
+  paper: '#F4F9FA',
+  line: '#DCE6EA',
 };
 
 /**

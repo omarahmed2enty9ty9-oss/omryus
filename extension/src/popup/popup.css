@@ -1,29 +1,29 @@
 body {
   width: 300px; margin: 0; padding: 14px;
   font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
-  color: #14142b; background: #fff;
+  color: #12233b; background: #fff;
 }
 header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
 header strong { font-size: 15px; }
 main { min-height: 56px; }
 h1 { margin: 0 0 2px; font-size: 15px; }
 p { margin: 0 0 6px; }
-.muted { color: #55556d; font-size: 13px; }
+.muted { color: #4a5a6e; font-size: 13px; }
 .badge {
   display: inline-block; margin-bottom: 6px; padding: 2px 6px; border-radius: 4px;
-  background: #fff4d6; color: #8a6100; font-size: 11px; font-weight: 600;
+  background: #fdf1dc; color: #8a5a08; font-size: 11px; font-weight: 600;
 }
 button {
   width: 100%; margin-top: 10px; padding: 9px 14px;
   font: inherit; font-size: 13px; font-weight: 500;
-  background: #5b4bff; color: #fff; border: 0; border-radius: 8px; cursor: pointer;
+  background: #12233b; color: #fff; border: 0; border-radius: 8px; cursor: pointer;
 }
-button:hover { background: #3b2fcc; }
+button:hover { background: #0e2138; }
 button:disabled { opacity: .6; cursor: default; }
 .disclosure {
-  margin: 14px 0 0; padding-top: 12px; border-top: 1px solid #ededf4;
-  font-size: 11px; line-height: 1.5; color: #85859c;
+  margin: 14px 0 0; padding-top: 12px; border-top: 1px solid #dce6ea;
+  font-size: 11px; line-height: 1.5; color: #7c8b9b;
 }
 footer { display: flex; gap: 14px; margin-top: 10px; font-size: 12px; }
-footer a { color: #5b4bff; text-decoration: none; }
+footer a { color: #12233b; text-decoration: none; }
 footer a:hover { text-decoration: underline; }

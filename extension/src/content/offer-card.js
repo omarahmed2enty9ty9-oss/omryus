@@ -15,19 +15,19 @@ const STYLES = `
     position: fixed; right: 16px; bottom: 16px; z-index: 2147483000;
     width: 320px; max-width: calc(100vw - 32px);
     box-sizing: border-box; padding: 16px;
-    background: #fff; color: #14142b;
-    border: 1px solid #e4e4ef; border-radius: 12px;
-    box-shadow: 0 8px 28px rgba(20, 20, 43, .16);
+    background: #fff; color: #12233b;
+    border: 1px solid #dce6ea; border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(14, 33, 56, .18);
     font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
   }
   .row { display: flex; align-items: flex-start; gap: 10px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: ${BRAND.color}; margin-top: 6px; flex: none; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: ${BRAND.accent}; margin-top: 6px; flex: none; }
   h1 { margin: 0 0 2px; font-size: 15px; font-weight: 600; }
-  p { margin: 0; color: #55556d; font-size: 13px; }
-  .meta { margin-top: 8px; font-size: 11px; color: #85859c; }
+  p { margin: 0; color: #4a5a6e; font-size: 13px; }
+  .meta { margin-top: 8px; font-size: 11px; color: #7c8b9b; }
   .badge {
     display: inline-block; margin-bottom: 8px; padding: 2px 6px; border-radius: 4px;
-    background: #fff4d6; color: #8a6100; font-size: 11px; font-weight: 600;
+    background: #fdf1dc; color: #8a5a08; font-size: 11px; font-weight: 600;
   }
   .actions { display: flex; gap: 8px; margin-top: 14px; }
   button {
@@ -37,15 +37,15 @@ const STYLES = `
   .apply { background: ${BRAND.color}; color: #fff; flex: 1; }
   .apply:hover { background: ${BRAND.colorDark}; }
   .apply:disabled { opacity: .6; cursor: default; }
-  .dismiss { background: #fff; color: #55556d; border-color: #e4e4ef; }
-  .dismiss:hover { background: #f6f6fb; }
+  .dismiss { background: #fff; color: #4a5a6e; border-color: #dce6ea; }
+  .dismiss:hover { background: #f4f9fa; }
   code {
     font: 13px ui-monospace, Menlo, Consolas, monospace;
-    background: #f2f2f8; padding: 2px 6px; border-radius: 4px; user-select: all;
+    background: #edf3f5; padding: 2px 6px; border-radius: 4px; user-select: all;
   }
   .close {
     position: absolute; top: 8px; right: 8px; padding: 4px 8px;
-    background: none; color: #85859c; font-size: 16px; line-height: 1;
+    background: none; color: #7c8b9b; font-size: 16px; line-height: 1;
   }
 `;
 

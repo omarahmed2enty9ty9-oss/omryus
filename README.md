@@ -6,6 +6,30 @@ for the store you're on, and inserts it **only after you click Apply**.
 Working name: **Omryus**. To rename it, edit `extension/src/shared/brand.js` and the `name` /
 `description` in `extension/manifest.template.json`.
 
+## Logo and colours
+
+Two vector sources in `extension/icons/`:
+
+| File | Used for | Why |
+|---|---|---|
+| `mark.svg` | 48px and 128px icons | The full mark — hat, lens, handle, sparkle |
+| `mark-small.svg` | 16px and 32px icons, favicon, site header | Simplified: no crown pinch, no hat band, shorter handle |
+
+The full mark turns to porridge at 16px, which is the Chrome toolbar size, so the small variant
+is a separate drawing rather than a scaled-down one. `npm run icons` renders both to PNG and
+copies the small one to `site/icon.svg`.
+
+Rendering is done by **Chrome itself** (it looks for a binary in the same places as
+`tools/launch-chrome.js`), so the shipped PNGs are exactly what a browser draws. ImageMagick is
+tempting here and wrong: without librsvg it silently drops strokes and circles.
+
+Colours live in `PALETTE` in `brand.js` and are mirrored in `site/style.css`:
+navy `#12233B` for primary actions, amber `#FCA429` as the accent, cool paper `#F4F9FA`.
+
+The injected card deliberately stays on system fonts and neutral surfaces — it renders inside
+other people's checkouts and should look like it belongs there. The marketing site is where the
+brand has personality (Instrument Serif headings, uppercase Inter wordmark).
+
 > **Status: pre-release.** There are no real affiliate partnerships and no real discount codes.
 > Everything shipped in `offers.json` is labelled `"source": "mock"` and the UI says so.
 
@@ -78,7 +102,7 @@ touch the manifest, HTML or `offers.json`).
 | `npm run dev` | Same, with JS rebuilt on save |
 | `npm test` | Runs the test suite (`node --test`, 46 tests) |
 | `npm run mock` | Serves the test checkout pages on <http://localhost:8642> |
-| `npm run icons` | Regenerates the icons from the brand colour |
+| `npm run icons` | Rasterises the logo SVGs into the PNG sizes Chrome needs |
 
 ---
 
@@ -93,7 +117,7 @@ which is why it needs no permissions of its own. See [ARCHITECTURE.md](ARCHITECT
 ```
 extension/src/
   shared/offers.js       validation, matching, expiry — pure functions, heavily tested
-  shared/brand.js        name and colours, in one file
+  shared/brand.js        name, colours and the donation recipient, in one file
   background/            service worker, offer source, affiliate providers, local counters
   content/               find the field, insert the code, draw the card
   popup/  options/       UI
