@@ -3,12 +3,30 @@
 export const BRAND = {
   name: 'Omryus',
   tagline: 'Find discounts while you shop.',
-  // Used for the injected UI and the icons.
+  // Used for the injected UI and the icons. The site mirrors these in style.css.
   color: '#5B4BFF',
   colorDark: '#3B2FCC',
   supportEmail: 'support@omryus.example',
-  privacyUrl: 'https://omryus.example/privacy',
+  privacyUrl: 'https://omryus.example/privacy.html',
   siteUrl: 'https://omryus.example',
+};
+
+/**
+ * The palette, in one place.
+ *
+ * The injected card deliberately stays on system fonts and neutral surfaces: it
+ * appears inside other people's checkouts and should feel like it belongs there,
+ * not like an advert. The marketing site is where the brand has personality.
+ */
+export const PALETTE = {
+  ink: '#14121F',
+  inkSoft: '#4A4760',
+  brand: '#5B4BFF',
+  brandDeep: '#3A2BD6',
+  sand: '#F7F0E4',
+  sandInk: '#7A5A18',
+  paper: '#FFFDFB',
+  line: '#E9E6F0',
 };
 
 /**

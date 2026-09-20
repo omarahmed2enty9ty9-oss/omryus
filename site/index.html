@@ -3,85 +3,257 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Omryus — find discounts while you shop</title>
-<meta name="description" content="Free Chrome extension that helps you apply available partner discounts at checkout." />
+<meta name="description" content="A free Chrome extension that helps you apply available partner discounts at checkout. Nothing is applied until you ask for it." />
 <link rel="icon" href="icon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="style.css" />
 <body>
 
-<header class="wrap">
-  <a class="logo" href="/"><img src="icon.svg" alt="" width="28" height="28" /> Omryus</a>
-  <nav><a href="#how">How it works</a> <a href="#stores">Stores</a> <a href="#privacy">Privacy</a></nav>
+<header id="top">
+  <div class="wrap">
+    <a class="logo" href="/"><img src="icon.svg" alt="" width="28" height="28" /> Omryus</a>
+    <nav>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#privacy">Privacy</a>
+      <a href="#donations">Donations</a>
+    </nav>
+  </div>
 </header>
 
 <main>
-  <section class="wrap hero">
-    <h1>Find discounts while you shop.</h1>
-    <p class="lead">
-      A free Chrome extension that helps you apply available partner discounts at checkout.
-      When we have a code for a store you're on, Omryus offers it. You decide whether to use it.
-    </p>
-    <p>
-      <a class="btn" href="#" aria-disabled="true">Add to Chrome — coming soon</a>
-      <span class="muted">Not yet on the Chrome Web Store.</span>
-    </p>
+
+  <!-- ---------------- hero ---------------- -->
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Find discounts while&nbsp;you shop.</h1>
+        <p class="lede">
+          A free Chrome extension that helps you apply available partner discounts at checkout.
+          When we have a code for a store you're on, Omryus offers it — and does nothing at all
+          until you say yes.
+        </p>
+        <div class="cta-row">
+          <a class="btn" href="#" aria-disabled="true">Add to Chrome <span class="soon">Soon</span></a>
+          <a class="btn btn-ghost" href="#how">See how it works</a>
+        </div>
+      </div>
+
+      <div class="shot">
+        <div class="checkout" aria-hidden="true">
+          <div class="checkout-row"><span>1 × Merino scarf</span><span>£48.00</span></div>
+          <div class="checkout-row"><span>1 × Wool hat</span><span>£22.00</span></div>
+          <div class="checkout-row"><span>Delivery</span><span>£3.50</span></div>
+          <div class="checkout-total"><span>Total</span><span>£73.50</span></div>
+          <div class="checkout-field"><span>Discount code</span><b>Apply</b></div>
+        </div>
+
+        <div class="card floating">
+          <span class="badge">EXAMPLE</span>
+          <div class="card-head">
+            <span class="dot"></span>
+            <div>
+              <h3>20% off your order</h3>
+              <p>We have a partner code for this store.</p>
+            </div>
+          </div>
+          <div class="meta">Code last checked 20 Sep 2026. Using this code supports Omryus, at no extra cost to you.</div>
+          <div class="actions"><span>Apply discount</span><span class="sec">Dismiss</span></div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="wrap" id="how">
-    <h2>How it works</h2>
-    <ol class="steps">
-      <li><strong>You shop as normal.</strong> Omryus only runs on the handful of stores we have a code for.</li>
-      <li><strong>We show what we have.</strong> A small card appears on the cart page. You can dismiss it.</li>
-      <li><strong>You click Apply.</strong> Nothing happens until you do.</li>
-      <li><strong>The code goes in the box.</strong> The store decides whether it's valid — we don't.</li>
-    </ol>
-    <p class="muted">If we can't find the discount box, we show you the code so you can paste it in yourself.</p>
+  <!-- ---------------- how it works ---------------- -->
+  <section id="how">
+    <div class="wrap narrow">
+      <span class="eyebrow">How it works</span>
+      <h2>Four steps, and you control the third.</h2>
+      <p class="lede">Most of what Omryus does is decide when to stay quiet.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div>
+            <h3>You shop as normal</h3>
+            <p>Omryus only runs on the handful of stores we actually have a code for. Everywhere
+              else it isn't loaded at all — not idle, not watching. Absent.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>We show what we've got</h3>
+            <p>A small card appears on the basket page, once. It tells you what the code is worth
+              and when we last checked that it works. Dismiss it and it goes.</p>
+          </div>
+        </div>
+        <div class="step key">
+          <div>
+            <h3>You click Apply</h3>
+            <p>Nothing is inserted, and nothing is tracked, before this. That's not a setting you
+              have to find — it's the only way the extension is built to work.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div>
+            <h3>The code goes in the box</h3>
+            <p>The store decides whether it's valid, not us. If we can't find the discount box,
+              we show you the code so you can paste it in yourself.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="wrap" id="stores">
-    <h2>Supported stores</h2>
-    <p class="notice">
-      <strong>Omryus is in development and has no partner agreements yet.</strong>
-      The codes in the extension today are clearly-labelled mock data used for testing.
-      Real offers will be listed here once real partnerships exist.
-    </p>
+  <!-- ---------------- donations ---------------- -->
+  <section id="donations" class="donation">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Codes that save you nothing</span>
+        <h2>We'd rather give it away than pretend.</h2>
+        <p class="lede">
+          Some partner codes carry no discount at all — they only track the sale. The industry
+          habit is to slip those in anyway and call it a deal.
+        </p>
+        <p class="lede">
+          We don't. When a code won't lower your price, Omryus says so in the first line, and
+          offers it as a donation instead: add it if you want to, and 100% of the commission goes
+          to <a href="https://www.map.org.uk/">Medical Aid for Palestinians</a>. We keep none of it.
+        </p>
+        <p class="lede">
+          Commission reaches us first and we forward it, so this is a promise about our conduct
+          rather than something the shop does automatically — which is exactly why we publish
+          <a href="donations.html">every penny we send</a>.
+        </p>
+      </div>
+
+      <div class="card">
+        <span class="badge">EXAMPLE</span>
+        <div class="card-head">
+          <span class="dot"></span>
+          <div>
+            <h3>Fund a donation with your order</h3>
+            <p>This code won't lower your price. If you use it, we donate every penny of the
+              commission to Medical Aid for Palestinians and keep none of it.</p>
+          </div>
+        </div>
+        <div class="meta">We earn a commission from this store and pass 100% of it on.</div>
+        <div class="actions"><span>Add the code</span><span class="sec">No thanks</span></div>
+      </div>
+    </div>
   </section>
 
-  <section class="wrap" id="privacy">
-    <h2>What Omryus can see</h2>
-    <ul class="ticks">
-      <li>The address of pages on the stores we have an offer for — and no others.</li>
-      <li>Whether a discount box exists on that page.</li>
-    </ul>
-    <h3>What it never touches</h3>
-    <ul class="crosses">
-      <li>Your card details, bank details or passwords.</li>
-      <li>Anything you type into a form.</li>
-      <li>Your basket, your order history or your browsing history.</li>
-    </ul>
-    <p>Omryus has no server and no account. Nothing about the pages you visit leaves your browser.
-      The extension requests one permission — local storage — plus access to the specific stores we support.</p>
-    <p><a href="privacy.html">Full privacy policy</a></p>
+  <!-- ---------------- privacy ---------------- -->
+  <section id="privacy">
+    <div class="wrap">
+      <span class="eyebrow">Privacy</span>
+      <h2>There's no server to send anything to.</h2>
+      <p class="lede">
+        Omryus has no accounts, no analytics service and no backend. Nothing about the pages you
+        visit leaves your browser, because there is nowhere for it to go.
+      </p>
+
+      <div class="cols">
+        <div class="panel can">
+          <h3>What it can see</h3>
+          <ul>
+            <li>The address of basket pages on the few stores we have a code for</li>
+            <li>Whether a discount box exists on that page</li>
+          </ul>
+        </div>
+        <div class="panel cant">
+          <h3>What it never touches</h3>
+          <ul>
+            <li>Your card, bank or billing details</li>
+            <li>Passwords — it refuses to write into password or payment fields</li>
+            <li>Anything you type into a form</li>
+            <li>Your basket, order history or browsing history</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="fine" style="max-width:66ch">
+        The extension asks for one permission — local storage — plus access to the specific stores
+        we support. Those are listed in the manifest and nowhere else.
+        <a href="privacy.html">Read the full policy</a>.
+      </p>
+    </div>
   </section>
 
-  <section class="wrap" id="affiliate">
-    <h2>Affiliate disclosure</h2>
-    <p>Omryus is free. Where a partner programme allows it, using a code we provided supports us,
-      at no extra cost to you. That only ever happens after you click <strong>Apply discount</strong>.</p>
-    <p>We never overwrite a referral or affiliate attribution that already belongs to somebody else,
-      and we never dress up a code that saves you nothing as a discount.</p>
-    <h3>Codes that don't discount anything</h3>
-    <p>Some partner codes only track the sale. Rather than pretend those are savings, we offer them
-      as donations: add one if you want to, and 100% of the commission goes to
-      <a href="https://www.map.org.uk/">Medical Aid for Palestinians</a>. We keep none of it.
-      Commission reaches us first and we forward it, so we publish what was sent.</p>
-    <p class="muted">We don't claim to find every discount, or the best price. We show you the codes we have.</p>
+  <!-- ---------------- stores ---------------- -->
+  <section>
+    <div class="wrap narrow">
+      <span class="eyebrow">Supported stores</span>
+      <h2>None yet, and we won't pretend otherwise.</h2>
+      <div class="notice">
+        <strong>Omryus is in development and has no partner agreements.</strong>
+        The codes in the extension today are clearly-labelled test data. Real stores will be listed
+        here, by name, once real partnerships exist — and not a moment before.
+      </div>
+    </div>
   </section>
+
+  <!-- ---------------- faq ---------------- -->
+  <section>
+    <div class="wrap narrow">
+      <span class="eyebrow">Questions</span>
+      <h2>The awkward ones first.</h2>
+
+      <div class="faq">
+        <details open>
+          <summary>How do you make money?</summary>
+          <p>Where a partner programme allows it, we earn a commission when you use a discount code
+            we provided. It costs you nothing extra. Codes that carry no discount earn us nothing —
+            that commission goes to charity in full.</p>
+        </details>
+        <details>
+          <summary>Will you overwrite someone else's referral?</summary>
+          <p>No. Omryus inserts a code into the box you can see and does nothing else — no
+            redirects, no rewritten links, no tracking cookies. If a creator or a friend referred
+            you to a shop, that attribution is untouched, because we never go near it.</p>
+        </details>
+        <details>
+          <summary>Do you find every discount?</summary>
+          <p>No, and we won't claim to. We show you the codes we have for the stores we've
+            partnered with. Shopping around is still on you.</p>
+        </details>
+        <details>
+          <summary>Does the code definitely work?</summary>
+          <p>The store decides that, not us. Each offer shows the date we last checked it, so you
+            can see for yourself how fresh it is.</p>
+        </details>
+        <details>
+          <summary>Can I turn it off?</summary>
+          <p>Dismiss any card and it closes. Uninstall and every trace goes with it — there's
+            nothing stored anywhere but your own browser.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
 </main>
 
-<footer class="wrap">
-  <p><a href="mailto:support@omryus.example">support@omryus.example</a> · <a href="privacy.html">Privacy</a></p>
-  <p class="muted">Omryus is an independent project and is not affiliated with any store unless stated.</p>
+<footer>
+  <div class="wrap">
+    <div>
+      <a class="logo" href="/"><img src="icon.svg" alt="" width="24" height="24" /> Omryus</a>
+      <p class="fine">An independent project, not affiliated with any store unless stated.
+        Free, and intended to stay that way.</p>
+    </div>
+    <nav>
+      <a href="privacy.html">Privacy</a>
+      <a href="donations.html">Donations</a>
+      <a href="mailto:support@omryus.example">Contact</a>
+    </nav>
+  </div>
 </footer>
 
+<script>
+  // Hairline under the header only once the page has moved.
+  const header = document.getElementById('top');
+  const sync = () => header.classList.toggle('stuck', window.scrollY > 8);
+  addEventListener('scroll', sync, { passive: true });
+  sync();
+</script>
 </body>
 </html>
