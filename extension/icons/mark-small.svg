@@ -1,14 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Omryus">
   <!-- Small-size variant of mark.svg: same composition — brim crossing the lens,
-       crown up and to the left — but flat colours and a smooth crown, because
-       gradients and the fedora pinch are sub-pixel at 16px. -->
+       crown up and to the left — with flat colours instead of gradients.
+       The crown pinch stays, and is exaggerated rather than scaled: the notch is
+       what makes this read as a fedora instead of a bowler, and silhouette is the
+       one thing that does survive at 16px. -->
   <circle cx="14.75" cy="17" r="6.8" fill="#F4F9FA"/>
   <path d="M16 12.6 Q16.6 16.4 20 17 Q16.6 17.6 16 21.4 Q15.4 17.6 12 17 Q15.4 16.4 16 12.6 Z" fill="#F7A81F"/>
   <circle cx="14.75" cy="17" r="6.8" fill="none" stroke="#1B3049" stroke-width="3.75"/>
   <line x1="21" y1="23.25" x2="26.5" y2="28.75" stroke="#22394F" stroke-width="3.75" stroke-linecap="round"/>
 
   <g transform="translate(-0.75 1.25) rotate(-19 13.6 11.5)">
-    <path d="M6.1 12.4 C6.1 4.2, 9 1.7, 13.6 1.7 C18.6 1.7, 20.6 5, 20.6 12.4 Z" fill="#4C6070"/>
+    <path d="M6.1 12.4 C6.1 7.6, 7.1 3.3, 9.6 2.9 C11.2 2.65, 11.3 5.1, 12.2 5.7 C13.4 6.4, 13.8 1.5, 16 1.5 C19.1 1.5, 20.6 6.6, 20.6 12.4 Z" fill="#4C6070"/>
     <path d="M6.1 6.3 C10 7.5, 16.6 7.7, 20.6 6.3 L20.6 10.5 L6.1 10.5 Z" fill="#0E2138"/>
     <rect x="1.25" y="10.1" width="24.75" height="2.9" rx="1.45" fill="#485D6C"/>
   </g>

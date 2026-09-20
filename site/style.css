@@ -49,6 +49,9 @@
 
 body {
   margin: 0;
+  /* clip, not hidden: keeps the hero glow from causing sideways scroll without
+     making the body a scroll container. */
+  overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
   font: 400 17px/1.6 var(--sans);
@@ -136,7 +139,7 @@ h2 { font-size: clamp(30px, 4vw, 40px); margin: 0 0 14px; line-height: 1.15; }
 
 /* ---------- hero ---------- */
 
-.hero { padding: 64px 0 88px; position: relative; overflow: hidden; }
+.hero { padding: 64px 0 88px; position: relative; }
 .hero::before {
   content: ""; position: absolute; inset: -40% 20% auto -20%; height: 620px;
   background: radial-gradient(ellipse at 30% 40%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%);
