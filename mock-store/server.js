@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 const root = dirname(fileURLToPath(import.meta.url));
 const TYPES = { '.html': 'text/html', '.css': 'text/css', '.js': 'text/javascript' };
 
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   const path = new URL(req.url, 'http://localhost').pathname;
   const file = join(root, normalize(path === '/' ? '/index.html' : path).replace(/^(\.\.[/\\])+/, ''));
   try {
@@ -22,4 +22,13 @@ createServer(async (req, res) => {
     res.writeHead(404, { 'content-type': 'text/plain' });
     res.end('not found');
   }
-}).listen(8642, () => console.log('Mock Store on http://localhost:8642'));
+});
+
+server.on('error', (error) => {
+  if (error.code !== 'EADDRINUSE') throw error;
+  console.error('Port 8642 is already in use — the mock store is probably already running.\n' +
+    'Open http://localhost:8642, or stop the other one with:  pkill -f mock-store/server.js');
+  process.exit(1);
+});
+
+server.listen(8642, () => console.log('Mock Store on http://localhost:8642'));
