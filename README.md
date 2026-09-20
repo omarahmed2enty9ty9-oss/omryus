@@ -43,6 +43,11 @@ To try it against the test checkouts:
 npm run mock
 ```
 
+In a second terminal, `npm run chrome` opens a browser with the extension already loaded
+(throwaway profile, no file picker). If you have no Chrome installed and no root access to
+install one, grab the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/)
+zip and unpack it to `~/.cache/omryus-chrome/` — the launcher finds it there.
+
 Open <http://localhost:8642> and work through the six fixtures. The card should appear on the five
 cart pages and **not** on the products page.
 
