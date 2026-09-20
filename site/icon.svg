@@ -1,13 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" role="img" aria-label="Omryus">
-  <!-- Small-size variant of mark.svg. Same silhouette, fewer details: the crown
-       loses its pinch, the band goes, the handle shortens, and everything fills
-       more of the box. At 16px the full mark turns to porridge. -->
-  <circle cx="13" cy="19.5" r="8.5" fill="#F4F9FA"/>
-  <path d="M13 13 Q14 18.5 19.5 19.5 Q14 20.5 13 26 Q12 20.5 6.5 19.5 Q12 18.5 13 13 Z" fill="#FCA429"/>
-  <circle cx="13" cy="19.5" r="8.5" fill="none" stroke="#0E2138" stroke-width="4"/>
-  <line x1="20" y1="26" x2="28.5" y2="30" stroke="#0E2138" stroke-width="4.5" stroke-linecap="round"/>
-  <g transform="rotate(-13 15 10)">
-    <path d="M6 11 C6 3.5 9 1 15 1 C21 1 24 3.5 24 11 Z" fill="#495C6A"/>
-    <rect x="1" y="9" width="28" height="4" rx="2" fill="#0E2138"/>
+  <!-- Small-size variant of mark.svg: same composition — brim crossing the lens,
+       crown up and to the left — but flat colours and a smooth crown, because
+       gradients and the fedora pinch are sub-pixel at 16px. -->
+  <circle cx="14.75" cy="17" r="6.8" fill="#F4F9FA"/>
+  <path d="M16 12.6 Q16.6 16.4 20 17 Q16.6 17.6 16 21.4 Q15.4 17.6 12 17 Q15.4 16.4 16 12.6 Z" fill="#F7A81F"/>
+  <circle cx="14.75" cy="17" r="6.8" fill="none" stroke="#1B3049" stroke-width="3.75"/>
+  <line x1="21" y1="23.25" x2="26.5" y2="28.75" stroke="#22394F" stroke-width="3.75" stroke-linecap="round"/>
+
+  <g transform="translate(-0.75 1.25) rotate(-19 13.6 11.5)">
+    <path d="M6.1 12.4 C6.1 4.2, 9 1.7, 13.6 1.7 C18.6 1.7, 20.6 5, 20.6 12.4 Z" fill="#4C6070"/>
+    <path d="M6.1 6.3 C10 7.5, 16.6 7.7, 20.6 6.3 L20.6 10.5 L6.1 10.5 Z" fill="#0E2138"/>
+    <rect x="1.25" y="10.1" width="24.75" height="2.9" rx="1.45" fill="#485D6C"/>
   </g>
 </svg>

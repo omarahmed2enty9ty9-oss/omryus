@@ -69,11 +69,17 @@ a:hover { text-decoration-color: currentColor; }
 
 header {
   position: sticky; top: 0; z-index: 50;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background .2s ease, border-color .2s ease;
+}
+/* Only once the page has moved. At rest the header must not tint the hero
+   gradient behind it, which shows up as a hard seam along its bottom edge. */
+header.stuck {
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid transparent;
+  border-bottom-color: var(--line);
 }
-header.stuck { border-bottom-color: var(--line); }
 header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
 .logo {
   display: inline-flex; align-items: center; gap: 9px;
