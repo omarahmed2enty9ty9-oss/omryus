@@ -54,6 +54,19 @@ const options = {
   logLevel: 'info',
 };
 
+/** Dev-only: the harness that lets the fixtures run without installing anything. */
+async function buildHarness() {
+  await build({
+    entryPoints: { _harness: resolve(root, 'mock-store/harness/main.js') },
+    outdir: resolve(root, 'mock-store'),
+    bundle: true,
+    format: 'iife',
+    target: 'chrome120',
+    logLevel: 'silent',
+  });
+  console.log('harness: mock-store/_harness.js (dev only, not shipped)');
+}
+
 async function copyStatic() {
   await cp(resolve(src, 'src/popup/popup.html'), resolve(out, 'popup/popup.html'));
   await cp(resolve(src, 'src/popup/popup.css'), resolve(out, 'popup/popup.css'));
@@ -76,5 +89,6 @@ if (watch) {
   await build(options);
   await generateManifest();
   await copyStatic();
+  await buildHarness();
   console.log(`built -> ${out}`);
 }

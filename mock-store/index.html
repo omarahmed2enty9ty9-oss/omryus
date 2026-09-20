@@ -1,12 +1,17 @@
-<!doctype html><meta charset="utf-8"><title>Mock Store</title><link rel="stylesheet" href="style.css">
+<!doctype html><meta charset="utf-8"><title>Mock Store</title><link rel="stylesheet" href="style.css"><script src="/demo-mode.js"></script>
 <h1>Mock Store — local test fixtures</h1>
-<p class="note">Load the unpacked extension from <code>dist/</code>, then open each page.
-The Omryus card should appear bottom-right on all of them.</p>
+<p class="note"><strong>Demo mode</strong> (links below) runs the real content script with a simulated
+service worker — no install needed. It exercises the genuine offer matching, expiry and insertion
+logic, but tells you nothing about the manifest, permissions or popup.<br>
+To test those, load <code>dist/</code> as an unpacked extension and open the same pages
+<em>without</em> <code>?demo</code>.</p>
 <ul>
-  <li><a href="/cart-static.html">Static cart</a> — plain form, present on load</li>
-  <li><a href="/cart-react.html">Controlled input</a> — value is wiped unless proper events fire</li>
-  <li><a href="/cart-late.html">Late cart</a> — coupon field appears after 1.5s</li>
-  <li><a href="/cart-shadow.html">Shadow DOM cart</a> — field inside a web component</li>
-  <li><a href="/cart-missing.html">No coupon box</a> — should fall back to "copy it yourself"</li>
-  <li><a href="/products.html">Products page</a> — supported store, wrong page: <strong>no card</strong></li>
+  <li><a href="/cart-static.html?demo">Static cart</a> — plain form, present on load</li>
+  <li><a href="/cart-react.html?demo">Controlled input</a> — value is wiped unless proper events fire</li>
+  <li><a href="/cart-late.html?demo">Late cart</a> — coupon field appears after 1.5s</li>
+  <li><a href="/cart-shadow.html?demo">Shadow DOM cart</a> — field inside a web component</li>
+  <li><a href="/cart-missing.html?demo">No coupon box</a> — should fall back to "copy it yourself"</li>
+  <li><a href="/products.html?demo">Products page</a> — supported store, wrong page: <strong>no card</strong></li>
 </ul>
+<p class="note">Dismissed an offer? It stays hidden for 7 days. Clear it with
+<code>localStorage.clear()</code> in the console, then reload.</p>

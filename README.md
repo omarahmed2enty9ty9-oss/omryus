@@ -46,6 +46,16 @@ npm run mock
 Open <http://localhost:8642> and work through the six fixtures. The card should appear on the five
 cart pages and **not** on the products page.
 
+### Demo mode (no install needed)
+
+The fixture links use `?demo`, which loads a dev harness (`mock-store/harness/`) that runs the
+**real** content script against the **real** offers, matching and insertion logic with a simulated
+service worker. Handy for iterating without reloading the extension.
+
+It does **not** test the manifest, permissions, service worker registration or popup — only
+loading `dist/` in Chrome does that. Open the fixtures without `?demo` to test the installed
+extension; the two never run at the same time.
+
 After changing anything, run `npm run build` and press the reload icon on the extension card in
 `chrome://extensions`. `npm run dev` rebuilds the JavaScript on save (re-run `npm run build` if you
 touch the manifest, HTML or `offers.json`).
