@@ -44,7 +44,9 @@ npm run mock
 ```
 
 In a second terminal, `npm run chrome` opens a browser with the extension already loaded
-(throwaway profile, no file picker). If you have no Chrome installed and no root access to
+(no file picker, and a dedicated profile that never touches your real browser data). The profile
+persists between runs so you can check that dismissals and counters survive a restart —
+`npm run chrome -- --fresh` wipes it. If you have no Chrome installed and no root access to
 install one, grab the [Chrome for Testing](https://googlechromelabs.github.io/chrome-for-testing/)
 zip and unpack it to `~/.cache/omryus-chrome/` — the launcher finds it there.
 

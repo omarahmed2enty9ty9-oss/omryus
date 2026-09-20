@@ -6,8 +6,8 @@
  * ~/.cache/omryus-chrome (used when there is no root access to apt-install one).
  */
 import { spawn } from 'node:child_process';
-import { existsSync, mkdtempSync } from 'node:fs';
-import { homedir, tmpdir } from 'node:os';
+import { existsSync, rmSync } from 'node:fs';
+import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -34,9 +34,14 @@ if (!existsSync(join(dist, 'manifest.json'))) {
   process.exit(1);
 }
 
-// A throwaway profile, so this never touches your real browser data.
-const profile = mkdtempSync(join(tmpdir(), 'omryus-profile-'));
-console.log(`${chrome}\nextension: ${dist}\nprofile:   ${profile}`);
+// A dedicated profile, so this never touches your real browser data. It is kept
+// between runs on purpose: dismissals and counters live in chrome.storage, and
+// you cannot test that they survive a restart with a fresh profile every time.
+// Pass --fresh to start clean.
+const profile = join(homedir(), '.cache/omryus-chrome/profile');
+const fresh = process.argv.includes('--fresh');
+if (fresh) rmSync(profile, { recursive: true, force: true });
+console.log(`${chrome}\nextension: ${dist}\nprofile:   ${profile}${fresh ? ' (wiped)' : ''}`);
 
 spawn(chrome, [
   `--user-data-dir=${profile}`,
@@ -44,6 +49,6 @@ spawn(chrome, [
   `--disable-extensions-except=${dist}`,
   '--no-first-run',
   '--no-default-browser-check',
-  ...process.argv.slice(2),
+  ...process.argv.slice(2).filter((a) => a !== '--fresh'),
   'http://localhost:8642/',
 ], { detached: true, stdio: 'ignore' }).unref();
