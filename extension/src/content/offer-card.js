@@ -87,7 +87,8 @@ export function showCard(offer, { onApply, onDismiss }) {
             <p>We have a partner code for ${escapeHtml(offer.merchantName)}.</p>
           </div>
         </div>
-        <div class="meta">${tested}${escapeHtml(offer.terms)} ${BRAND.name} may earn a commission if you use it.</div>
+        <div class="meta">${tested}${escapeHtml(offer.terms)} Using this code supports ${BRAND.name},
+          at no extra cost to you.</div>
         <div class="actions">
           <button class="apply">Apply discount</button>
           <button class="dismiss">Dismiss</button>

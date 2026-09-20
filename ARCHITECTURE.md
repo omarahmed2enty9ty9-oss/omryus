@@ -37,7 +37,7 @@ exactly one file and no page-facing code.
 | `GET_OFFER {url}` | content → worker | `{offer}` — title, merchant, terms. **Not the code.** |
 | `APPLY_OFFER {offerId, url}` | content → worker | `{code, fieldSelectors, applyButtonSelectors}` |
 | `OFFER_DISPLAYED {offerId}` | content → worker | `{ok}` |
-| `DISMISS_OFFER {offerId}` | content → worker | `{ok}` |
+| `DISMISS_OFFER` | content → worker | `{ok}` — closes the card for that page view only; not remembered |
 | `POPUP_STATE` | popup → content | `{supported, offer}` |
 | `POPUP_APPLY` | popup → content | `{ok}` |
 
@@ -49,7 +49,7 @@ line in the code rather than a promise in a doc.
 
 | Permission | Why |
 |---|---|
-| `storage` | Dismissals, settings, counters |
+| `storage` | Settings and the local counters |
 | `host_permissions` | Generated from `offers.json` — only stores with a live offer |
 | ~~`tabs`~~ | Not needed. The popup gets the tab id (no permission) and messages the content script |
 | ~~`activeTab`~~ | Not needed, for the same reason |
@@ -69,9 +69,13 @@ things. Each maps to a specific place in the code:
 |---|---|
 | Disclosed before install, in the listing, and in the UI | Card footer, popup, options page, landing page |
 | Related user action before *each* affiliate code | The code only leaves the worker in response to `APPLY_OFFER` |
-| Real user benefit at that moment, tied to core purpose | We only show a card when a live offer exists; `affiliate.js` refuses anything else |
+| Real user benefit at that moment, tied to core purpose | `resolveAttribution()` refuses any offer failing `hasUserBenefit()` — a code that discounts nothing never reaches the page |
 | Data collection strictly necessary to a single purpose | No network calls exist. Counters are local and can be switched off |
 | No remotely hosted code (MV3) | `npm run build` bundles everything. Remote *data* is allowed later; remote code never |
+
+**The benefit check is deliberately central**, above the provider lookup, so adding a real
+affiliate network cannot accidentally re-open the zero-discount case. A programme offering a
+tracking-only code is one we decline, not one we quietly pass through with a disclosure.
 
 **Not overwriting other people's attribution** isn't policed by a check — it's structural.
 `code-only` attribution can't overwrite a cookie or a referral parameter because it never

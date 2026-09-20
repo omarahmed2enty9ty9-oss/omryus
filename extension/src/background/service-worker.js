@@ -6,42 +6,28 @@
  * the code?". Keeping the rules here means swapping offers.json for an API
  * later does not touch any page-facing code.
  */
-import { findOfferForUrl, isDismissed } from '../shared/offers.js';
+import { findOffersForUrl } from '../shared/offers.js';
 import { LocalOfferSource } from './offer-source.js';
 import { resolveAttribution } from './affiliate.js';
 import { track } from './analytics.js';
 
 const offerSource = new LocalOfferSource();
-const DISMISSED_KEY = 'dismissed';
 
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') track('extension_installed');
 });
 
-/** Offer the user has silenced recently? */
-async function isSilenced(offerId) {
-  const { [DISMISSED_KEY]: dismissed = {} } = await chrome.storage.local.get(DISMISSED_KEY);
-  return isDismissed(dismissed[offerId]);
-}
-
-async function silence(offerId) {
-  const { [DISMISSED_KEY]: dismissed = {} } = await chrome.storage.local.get(DISMISSED_KEY);
-  dismissed[offerId] = Date.now();
-  await chrome.storage.local.set({ [DISMISSED_KEY]: dismissed });
-}
-
 /**
  * Find a usable offer for a URL, or null.
  * "Usable" also means we have an affiliate provider that permits it — an offer
- * we are not authorised to act on is treated as if it did not exist.
+ * we are not authorised to act on, including one that discounts nothing, is
+ * treated as if it did not exist.
  */
 async function getUsableOffer(url) {
   const offers = await offerSource.getOffers();
-  const offer = findOfferForUrl(offers, url);
-  if (!offer) return null;
-  if (!resolveAttribution(offer)) return null;
-  if (await isSilenced(offer.id)) return null;
-  return offer;
+  // First offer we are actually permitted to act on — a refused one (wrong
+  // attribution mode, or no benefit to the shopper) is skipped, not fatal.
+  return findOffersForUrl(offers, url).find((offer) => resolveAttribution(offer)) ?? null;
 }
 
 /**
@@ -85,8 +71,12 @@ const handlers = {
     return { ok: true };
   },
 
-  async DISMISS_OFFER({ offerId }) {
-    await silence(offerId);
+  /**
+   * Dismiss closes the card for this page view only. It is deliberately not
+   * remembered: the offer comes back next time the shopper reaches a checkout
+   * where a code is available.
+   */
+  async DISMISS_OFFER() {
     await track('offer_dismissed');
     return { ok: true };
   },

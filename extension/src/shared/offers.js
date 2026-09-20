@@ -8,7 +8,7 @@
  * @property {string} id                       Stable key. Used for dismissal + analytics.
  * @property {{name: string, domains: string[]}} merchant
  * @property {string} title                    Shown to the user, e.g. "20% off your order".
- * @property {{type: 'percent'|'fixed'|'shipping', value: number}} discount
+ * @property {{type: 'percent'|'fixed'|'shipping'|'none', value: number}} discount  'none' = attribution-only, never usable
  * @property {string} code                     The promo code we insert.
  * @property {string} [terms]                  Short plain-English conditions.
  * @property {{network: string, attributionMode: 'code-only'|'link', url: string|null}} affiliate
@@ -21,10 +21,7 @@
  */
 
 const ATTRIBUTION_MODES = ['code-only', 'link'];
-const DISCOUNT_TYPES = ['percent', 'fixed', 'shipping'];
-
-/** How long a dismissal silences an offer. */
-export const DISMISS_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+const DISCOUNT_TYPES = ['percent', 'fixed', 'shipping', 'none'];
 
 const isNonEmptyString = (v) => typeof v === 'string' && v.trim() !== '';
 const isStringArray = (v) => Array.isArray(v) && v.length > 0 && v.every(isNonEmptyString);
@@ -107,24 +104,39 @@ export function isOfferLive(offer, now = Date.now()) {
   return true;
 }
 
-/** The one function the service worker actually calls. */
-export function findOfferForUrl(offers, url, now = Date.now()) {
+/**
+ * Every live offer for this URL, in file order.
+ *
+ * Returns all of them rather than just the first: the caller still has to check
+ * whether it is permitted to act on an offer, and a refused one must not shadow
+ * a usable one for the same page.
+ */
+export function findOffersForUrl(offers, url, now = Date.now()) {
   let parsed;
   try {
     parsed = new URL(url);
   } catch {
-    return null;
+    return [];
   }
-  return (
-    offers.find(
-      (offer) =>
-        isOfferLive(offer, now) && matchesDomain(offer, parsed.hostname) && matchesUrlPattern(offer, url),
-    ) ?? null
+  return offers.filter(
+    (offer) => isOfferLive(offer, now) && matchesDomain(offer, parsed.hostname) && matchesUrlPattern(offer, url),
   );
 }
 
-/** @param {number|undefined} dismissedAt */
-export function isDismissed(dismissedAt, now = Date.now()) {
-  if (typeof dismissedAt !== 'number') return false;
-  return now - dismissedAt < DISMISS_DURATION_MS;
+/**
+ * Does this offer give the shopper something?
+ *
+ * This is the line Chrome Web Store policy draws: an affiliate code may only be
+ * included when it provides "a direct and transparent user benefit". A code that
+ * discounts nothing is attribution-only — it earns us commission and gives the
+ * shopper nothing — and inserting it is prohibited however clearly we disclose
+ * it and however explicitly the user consents.
+ *
+ * See resolveAttribution() in background/affiliate.js, which refuses these.
+ */
+export function hasUserBenefit(offer) {
+  const { type, value } = offer.discount;
+  if (type === 'none') return false;
+  if (type === 'shipping') return true;
+  return typeof value === 'number' && value > 0;
 }

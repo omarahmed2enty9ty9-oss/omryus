@@ -11,9 +11,14 @@
  * URLs, and do not write cookies. Nothing in this file can earn commission yet,
  * and that is deliberate — see ARCHITECTURE.md.
  *
+ * A code that discounts nothing is refused outright, in resolveAttribution()
+ * below, whatever a provider says. See hasUserBenefit() for why.
+ *
  * @typedef {{mode: 'code-only', code: string}} Attribution
  * @typedef {{name: string, resolve: (offer: import('../shared/offers.js').Offer) => Attribution|null}} AffiliateProvider
  */
+
+import { hasUserBenefit } from '../shared/offers.js';
 
 /** The only provider that exists today. Real networks register alongside it. */
 const mockProvider = {
@@ -40,6 +45,10 @@ export function registerProvider(provider) {
  * @returns {Attribution|null}
  */
 export function resolveAttribution(offer) {
+  // Enforced here rather than per-provider so a future network integration
+  // cannot bypass it: no benefit to the shopper, no affiliate code. Ever.
+  if (!hasUserBenefit(offer)) return null;
+
   const provider = providers[offer.affiliate.network];
   if (!provider) return null;
   return provider.resolve(offer);

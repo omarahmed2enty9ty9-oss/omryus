@@ -10,28 +10,15 @@
  * registration or popup work. Only loading dist/ in Chrome tests those.
  */
 import offersJson from '../../extension/src/data/offers.json';
-import { findOfferForUrl, isDismissed, loadOffers } from '../../extension/src/shared/offers.js';
+import { findOffersForUrl, loadOffers } from '../../extension/src/shared/offers.js';
 import { resolveAttribution } from '../../extension/src/background/affiliate.js';
 
 const { offers, errors } = loadOffers(offersJson);
 if (errors.length) console.warn('[harness] invalid offers skipped:', errors);
 
-const DISMISS_KEY = 'omryus-demo-dismissed';
-const readDismissed = () => {
-  try {
-    return JSON.parse(localStorage.getItem(DISMISS_KEY)) ?? {};
-  } catch {
-    return {};
-  }
-};
-
-/** Same rule the service worker applies: live, matching, permitted, not dismissed. */
+/** Same rule the service worker applies: live, matching, and permitted. */
 function usableOffer(url) {
-  const offer = findOfferForUrl(offers, url);
-  if (!offer) return null;
-  if (!resolveAttribution(offer)) return null;
-  if (isDismissed(readDismissed()[offer.id])) return null;
-  return offer;
+  return findOffersForUrl(offers, url).find((offer) => resolveAttribution(offer)) ?? null;
 }
 
 const handlers = {
@@ -65,13 +52,7 @@ const handlers = {
 
   OFFER_DISPLAYED: () => ({ ok: true }),
 
-  DISMISS_OFFER: ({ offerId }) => {
-    const dismissed = readDismissed();
-    dismissed[offerId] = Date.now();
-    localStorage.setItem(DISMISS_KEY, JSON.stringify(dismissed));
-    console.log('[harness] dismissed for 7 days. Clear with: localStorage.clear()');
-    return { ok: true };
-  },
+  DISMISS_OFFER: () => ({ ok: true }),
 };
 
 window.chrome = {

@@ -13,5 +13,6 @@ To test those, load <code>dist/</code> as an unpacked extension and open the sam
   <li><a href="/cart-missing.html?demo">No coupon box</a> — should fall back to "copy it yourself"</li>
   <li><a href="/products.html?demo">Products page</a> — supported store, wrong page: <strong>no card</strong></li>
 </ul>
-<p class="note">Dismissed an offer? It stays hidden for 7 days. Clear it with
-<code>localStorage.clear()</code> in the console, then reload.</p>
+<p class="note">Dismiss closes the card for that page view only — reload, or open another cart
+page, and it comes back. That is deliberate: the offer should appear whenever there is a code
+available at checkout.</p>

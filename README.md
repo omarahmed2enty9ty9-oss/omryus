@@ -15,7 +15,7 @@ Working name: **Omryus**. To rename it, edit `extension/src/shared/brand.js` and
 
 1. You open a cart or checkout page on a store we support.
 2. A small card appears bottom-right: *"20% off your order — we have a partner code for this store."*
-3. You click **Apply discount** (or **Dismiss** — it stays gone for a week).
+3. You click **Apply discount** (or **Dismiss**, which closes the card for that page).
 4. The extension finds the discount box, puts the code in, and fires the events frameworks need.
 5. If it can't find the box, it shows you the code to paste in yourself.
 
@@ -110,7 +110,7 @@ extension/src/
   "id": "mockstore-autumn-2026",              // stable — used for dismissals and counters
   "merchant": { "name": "Mock Store", "domains": ["mockstore.example"] },
   "title": "20% off your order",              // shown to the user
-  "discount": { "type": "percent", "value": 20 },
+  "discount": { "type": "percent", "value": 20 },   // percent | fixed | shipping | none
   "code": "MOCK20",
   "terms": "Short plain-English conditions.",
   "affiliate": {
@@ -134,6 +134,21 @@ extension/src/
 
 An entry that fails validation is **skipped with a warning**, not fatal — one typo can't take down
 every other merchant. The rules live in `extension/src/shared/offers.js`.
+
+### Codes that don't discount anything
+
+Some affiliate programmes issue a code that tracks attribution but saves the shopper nothing.
+The schema can hold one (`"discount": { "type": "none", "value": 0 }`) so you can record it, but
+**it will never be shown or inserted.** `resolveAttribution()` refuses any offer that fails
+`hasUserBenefit()`, and the check sits above the provider so no future network integration can
+skip it.
+
+That isn't caution, it's the rule: Chrome Web Store policy permits an affiliate code only when it
+gives "a direct and transparent user benefit", and the 2025 update names this exact case — a
+coupon extension "must not insert an affiliate link if no coupon or discount is found". Disclosure
+and an explicit click don't substitute for the benefit; all three are required. A code carrying
+free shipping, a gift or cashback **is** a benefit and works normally — it's specifically the
+zero-value ones that are refused.
 
 ### Adding a merchant
 
@@ -199,7 +214,8 @@ merchant detection, lookalike domains, wrong-page suppression, active offers, ex
 not-yet-started offers, deactivated offers, malformed offer data, dismissal expiry, code insertion
 into plain and controlled (React/Vue-style) inputs, missing fields, dynamically appearing fields,
 shadow-DOM fields, refusal to touch password and card fields, duplicate notification suppression,
-the affiliate provider's refusal of unsupported modes, and HTML escaping of offer data.
+the affiliate provider's refusal of unsupported modes and of zero-benefit codes, and HTML escaping
+of offer data.
 
 `mock-store/` holds six checkout fixtures for manual testing — static, controlled-input,
 late-rendering, shadow DOM, no-coupon-box, and a non-cart page that should stay quiet.

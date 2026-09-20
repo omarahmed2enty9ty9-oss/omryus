@@ -5,6 +5,7 @@ import { registerProvider, resolveAttribution } from '../extension/src/backgroun
 const base = {
   id: 'x',
   code: 'TEST20',
+  discount: { type: 'percent', value: 20 },
   affiliate: { network: 'mock', attributionMode: 'code-only', url: null },
 };
 
@@ -19,6 +20,24 @@ test('link attribution is refused until a real network implements it', () => {
 
 test('an unknown affiliate network is refused', () => {
   assert.equal(resolveAttribution({ ...base, affiliate: { ...base.affiliate, network: 'nope' } }), null);
+});
+
+test('a code that discounts nothing is refused', () => {
+  // The shopper gets nothing, we get commission. Prohibited, and the refusal is
+  // central so no provider can opt out of it.
+  const attributionOnly = { ...base, discount: { type: 'none', value: 0 } };
+  assert.equal(resolveAttribution(attributionOnly), null);
+});
+
+test('a zero-percent discount is refused', () => {
+  assert.equal(resolveAttribution({ ...base, discount: { type: 'percent', value: 0 } }), null);
+});
+
+test('a provider cannot bypass the benefit check', () => {
+  registerProvider({ name: 'greedy', resolve: (offer) => ({ mode: 'code-only', code: offer.code }) });
+  const offer = { ...base, discount: { type: 'none', value: 0 },
+    affiliate: { network: 'greedy', attributionMode: 'code-only', url: null } };
+  assert.equal(resolveAttribution(offer), null, 'the central guard must win');
 });
 
 test('a new network can be registered without touching the rest of the code', () => {

@@ -35,9 +35,11 @@ test('labels mock data so it can never be mistaken for a real partnership', () =
   assert.match(document.getElementById(HOST_ID).shadowRoot.textContent, /MOCK OFFER/);
 });
 
-test('discloses that we may earn a commission', () => {
+test('discloses the affiliate relationship on the card itself', () => {
   showCard(OFFER, { onApply: noop, onDismiss: noop });
-  assert.match(document.getElementById(HOST_ID).shadowRoot.textContent, /commission/i);
+  const text = document.getElementById(HOST_ID).shadowRoot.textContent;
+  assert.match(text, /supports Omryus/i, 'must say the code supports us');
+  assert.match(text, /no extra cost/i, 'must say it costs the shopper nothing');
 });
 
 test('the code is not in the page until the user clicks Apply', () => {
