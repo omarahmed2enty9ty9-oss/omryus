@@ -1,0 +1,49 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Omryus settings</title>
+<link rel="stylesheet" href="../popup/popup.css" />
+<style>
+  body { width: auto; max-width: 560px; padding: 32px; }
+  section { margin-bottom: 28px; }
+  h2 { font-size: 15px; margin: 0 0 8px; }
+  label { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; }
+  ul { margin: 8px 0; padding-left: 18px; font-size: 13px; color: #55556d; }
+  .counts { font: 13px ui-monospace, Menlo, Consolas, monospace; color: #55556d; }
+  button.secondary { width: auto; background: #fff; color: #55556d; border: 1px solid #e4e4ef; }
+  button.secondary:hover { background: #f6f6fb; }
+</style>
+<body>
+  <header><strong>Omryus settings</strong></header>
+
+  <section>
+    <h2>Local counters</h2>
+    <label>
+      <input type="checkbox" id="analytics" />
+      <span>Count how often offers are shown, applied and dismissed.
+        These numbers stay on this device and are never sent anywhere.</span>
+    </label>
+    <p class="counts" id="counts"></p>
+    <button class="secondary" id="reset">Reset counters</button>
+  </section>
+
+  <section>
+    <h2>What Omryus can see</h2>
+    <ul>
+      <li>The address of pages on stores we have an offer for — and no others.</li>
+      <li>Whether a discount box exists on that page.</li>
+      <li>Nothing else. We never read what you type, your basket, your card details or your password.</li>
+      <li>No page content ever leaves your browser. Omryus has no server.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Affiliate disclosure</h2>
+    <p class="muted">Omryus inserts a discount code only after you click
+      <strong>Apply discount</strong>. Where a partner programme allows it, we may earn a
+      commission when a code is used. We never overwrite a referral or affiliate
+      attribution that already belongs to somebody else.</p>
+    <p class="muted"><strong>The codes shipped today are clearly-labelled mock data.</strong>
+      We have no real partnerships yet.</p>
+  </section>
+  <script src="options.js"></script>
+</body>

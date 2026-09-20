@@ -1,0 +1,12 @@
+<!doctype html><meta charset="utf-8"><title>Mock Store</title><link rel="stylesheet" href="style.css">
+<h1>Mock Store — local test fixtures</h1>
+<p class="note">Load the unpacked extension from <code>dist/</code>, then open each page.
+The Omryus card should appear bottom-right on all of them.</p>
+<ul>
+  <li><a href="/cart-static.html">Static cart</a> — plain form, present on load</li>
+  <li><a href="/cart-react.html">Controlled input</a> — value is wiped unless proper events fire</li>
+  <li><a href="/cart-late.html">Late cart</a> — coupon field appears after 1.5s</li>
+  <li><a href="/cart-shadow.html">Shadow DOM cart</a> — field inside a web component</li>
+  <li><a href="/cart-missing.html">No coupon box</a> — should fall back to "copy it yourself"</li>
+  <li><a href="/products.html">Products page</a> — supported store, wrong page: <strong>no card</strong></li>
+</ul>

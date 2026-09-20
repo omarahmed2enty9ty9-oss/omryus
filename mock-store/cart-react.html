@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>Cart (controlled) — Mock Store</title><link rel="stylesheet" href="style.css">
+<nav><a href="/">← fixtures</a></nav>
+<h1>Your basket</h1>
+<p class="note">Simulates a React/Vue controlled input: the framework owns the value and
+re-applies its own state four times a second. Setting <code>.value</code> without a bubbling
+<code>input</code> event gets wiped — this is the case <code>insert-code.js</code> exists for.</p>
+<div class="box">
+  <label for="promo-code">Promo code</label>
+  <input id="promo-code" autocomplete="off">
+  <p class="note">Framework state: "<span id="state"></span>"</p>
+</div>
+<script>
+  const el = document.getElementById('promo-code');
+  const state = { coupon: '' };
+  el.addEventListener('input', () => { state.coupon = el.value; });   // framework reads the event
+  setInterval(() => {                                                  // framework re-renders
+    if (el.value !== state.coupon) el.value = state.coupon;
+    document.getElementById('state').textContent = state.coupon;
+  }, 250);
+</script>

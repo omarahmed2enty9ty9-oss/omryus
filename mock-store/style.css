@@ -1,0 +1,10 @@
+body { font: 15px/1.5 system-ui, sans-serif; max-width: 620px; margin: 40px auto; padding: 0 20px; color: #14142b; }
+h1 { font-size: 20px; } h2 { font-size: 15px; margin-top: 28px; }
+.box { border: 1px solid #e4e4ef; border-radius: 10px; padding: 18px; margin: 18px 0; }
+label { display: block; font-size: 13px; color: #55556d; margin-bottom: 6px; }
+input { font: inherit; padding: 8px 10px; border: 1px solid #ccccdd; border-radius: 6px; width: 200px; }
+button { font: inherit; padding: 8px 14px; border: 0; border-radius: 6px; background: #14142b; color: #fff; cursor: pointer; }
+.total { font-weight: 600; }
+.note { font-size: 13px; color: #85859c; }
+nav a { display: inline-block; margin-right: 12px; font-size: 13px; }
+.applied { color: #0a7d49; font-size: 13px; }

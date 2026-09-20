@@ -1,0 +1,13 @@
+<!doctype html><meta charset="utf-8"><title>Cart (late) — Mock Store</title><link rel="stylesheet" href="style.css">
+<nav><a href="/">← fixtures</a></nav>
+<h1>Your basket</h1>
+<p class="note">The coupon form is injected 1.5 seconds after load, like a checkout that
+fetches its form. <code>waitForField()</code> should still find it.</p>
+<div class="box" id="slot"><p class="note">Loading discount options…</p></div>
+<script>
+  setTimeout(() => {
+    document.getElementById('slot').innerHTML =
+      '<label for="p">Discount code</label><input id="p" name="promo" autocomplete="off">' +
+      '<button id="apply-promo">Apply</button>';
+  }, 1500);
+</script>

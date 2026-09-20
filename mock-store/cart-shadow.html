@@ -1,0 +1,14 @@
+<!doctype html><meta charset="utf-8"><title>Cart (shadow) — Mock Store</title><link rel="stylesheet" href="style.css">
+<nav><a href="/">← fixtures</a></nav>
+<h1>Your basket</h1>
+<p class="note">The coupon field lives inside an open shadow root. <code>queryDeep()</code> walks into it.</p>
+<div class="box"><coupon-form></coupon-form></div>
+<script>
+  customElements.define('coupon-form', class extends HTMLElement {
+    connectedCallback() {
+      this.attachShadow({ mode: 'open' }).innerHTML =
+        '<label for="c">Discount code</label>' +
+        '<input id="c" name="coupon" autocomplete="off" style="font:inherit;padding:8px 10px;border:1px solid #ccd;border-radius:6px">';
+    }
+  });
+</script>

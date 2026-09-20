@@ -1,0 +1,11 @@
+<!doctype html><meta charset="utf-8"><title>Cart (no coupon box) — Mock Store</title><link rel="stylesheet" href="style.css">
+<nav><a href="/">← fixtures</a></nav>
+<h1>Your basket</h1>
+<p class="note">No discount field anywhere. After ~10s of watching, Omryus should show the
+code and tell you to enter it yourself — never a silent failure.</p>
+<div class="box"><p>1 × Test Widget</p><p class="total">Total: £50.00</p></div>
+<div class="box">
+  <label for="pw">Password (must never be touched)</label>
+  <input id="pw" type="password" name="coupon">
+  <p class="note">Named "coupon" on purpose — the safety guard in find-field.js must skip it.</p>
+</div>
