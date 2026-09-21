@@ -1,47 +1,51 @@
 /* Omryus — marketing site.
-   Palette mirrors PALETTE in extension/src/shared/brand.js. */
+   Warm porcelain, near-black ink, one amber accent. The injected extension card
+   keeps its own navy/system-font look (see extension/src/shared/brand.js): it
+   renders inside other people's checkouts and should feel native there. */
 
 :root {
-  --ink: #12233b;
-  --ink-soft: #4a5a6e;
-  --ink-faint: #7c8b9b;
-  --brand: #12233b;          /* navy — primary actions, from the wordmark */
-  --brand-deep: #0e2138;
-  --brand-wash: #e8eef2;
-  --accent: #fca429;         /* amber — the sparkle in the mark */
-  --sand: #fdf1dc;
-  --sand-ink: #8a5a08;
-  --on-brand: #ffffff;
-  --paper: #f4f9fa;
+  --paper: #fbf9f5;          /* porcelain */
   --surface: #ffffff;
-  --line: #dce6ea;
-  --shadow: 0 1px 2px rgba(14, 33, 56, .05), 0 12px 32px -8px rgba(14, 33, 56, .12);
-  --shadow-lg: 0 2px 4px rgba(14, 33, 56, .05), 0 24px 56px -12px rgba(14, 33, 56, .22);
+  --tile: #efede7;
+  --ink: #191722;            /* near-black */
+  --ink-soft: #6b6878;
+  --ink-faint: #8e8a99;
+  --line: #e5e2db;
+  --brand: #14243c;          /* the mark's navy — primary actions, links */
+  --brand-deep: #0e2138;
+  --on-brand: #ffffff;
+  --accent: #fca429;         /* amber — the sparkle in the mark. Fills, never text on porcelain. */
+  --accent-ink: #8a5a08;     /* the amber that passes contrast as text */
+  --accent-wash: #fdf3e1;
+  --shadow: 0 1px 2px rgba(25, 23, 34, .04), 0 10px 30px -10px rgba(25, 23, 34, .12);
+  --shadow-lg: 0 2px 4px rgba(25, 23, 34, .05), 0 28px 60px -18px rgba(25, 23, 34, .20);
   --radius: 16px;
+  --radius-sm: 10px;
+  --pill: 999px;
   --display: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --sans: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "Spline Sans Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
+/* Dark stays WARM, not navy — the point of the repalette is to leave the
+   dark-blue-tech look behind in both themes, not just one. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #eaf1f5;
-    --ink-soft: #a4b5c4;
-    --ink-faint: #74869a;
-    /* Navy is invisible on navy, so the primary action inverts to near-white.
-       Amber stays the accent in both themes. */
-    --brand: #eaf1f5;
+    --paper: #14120e;
+    --surface: #1d1a15;
+    --tile: #262119;
+    --ink: #f6f3ec;
+    --ink-soft: #a8a296;
+    --ink-faint: #938c7e;
+    --line: #2e2921;
+    --brand: #f6f3ec;        /* navy is invisible on near-black; the primary inverts */
     --brand-deep: #ffffff;
-    --brand-wash: #17293f;
-    --accent: #fcb04a;
-    --sand: #2e2413;
-    --sand-ink: #f0c680;
-    --on-brand: #0b1728;
-    --paper: #0b1728;
-    --surface: #12213a;
-    --line: #23364f;
-    --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 12px 32px -8px rgba(0, 0, 0, .55);
-    --shadow-lg: 0 2px 4px rgba(0, 0, 0, .35), 0 24px 56px -12px rgba(0, 0, 0, .65);
+    --on-brand: #14120e;
+    --accent: #ffb84d;
+    --accent-ink: #f0c680;
+    --accent-wash: #2c2312;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 10px 30px -10px rgba(0, 0, 0, .5);
+    --shadow-lg: 0 2px 4px rgba(0, 0, 0, .3), 0 28px 60px -18px rgba(0, 0, 0, .6);
   }
 }
 
@@ -49,23 +53,19 @@
 
 body {
   margin: 0;
-  /* clip, not hidden: keeps the hero glow from causing sideways scroll without
-     making the body a scroll container. */
   overflow-x: clip;
   background: var(--paper);
   color: var(--ink);
-  font: 400 17px/1.6 var(--sans);
+  font: 400 17px/1.62 var(--sans);
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: -.01em; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: -0.012em; }
 p { margin: 0 0 1em; }
-a { color: var(--brand); text-decoration-color: color-mix(in srgb, var(--brand) 35%, transparent); text-underline-offset: 3px; }
+a { color: var(--brand); text-decoration-color: color-mix(in srgb, currentColor 32%, transparent); text-underline-offset: 3px; }
 a:hover { text-decoration-color: currentColor; }
 
 .wrap { width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 28px; }
-/* Narrow sections keep the same container, and constrain their children instead,
-   so every section shares one left edge however wide its content is. */
 .narrow > * { max-width: 780px; }
 
 /* ---------- header ---------- */
@@ -76,17 +76,15 @@ header {
   border-bottom: 1px solid transparent;
   transition: background .2s ease, border-color .2s ease;
 }
-/* Only once the page has moved. At rest the header must not tint the hero
-   gradient behind it, which shows up as a hard seam along its bottom edge. */
 header.stuck {
   background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(12px);
   border-bottom-color: var(--line);
 }
-header .wrap { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
 .logo {
   display: inline-flex; align-items: center; gap: 9px;
-  font: 600 19px/1 var(--sans); letter-spacing: .015em; text-transform: uppercase;
+  font: 700 19px/1 var(--sans); letter-spacing: .012em; text-transform: uppercase;
   color: var(--ink); text-decoration: none;
 }
 footer .logo { align-items: flex-start; }
@@ -96,107 +94,106 @@ footer .logo img { margin-top: 1px; }
   font: 500 9.5px/1 var(--sans); letter-spacing: .22em; color: var(--ink-faint);
 }
 nav { display: flex; align-items: center; gap: 26px; }
-nav a { font-size: 14.5px; color: var(--ink-soft); text-decoration: none; }
+nav a { font-size: 15px; color: var(--ink-soft); text-decoration: none; }
 nav a:hover { color: var(--ink); }
 @media (max-width: 720px) { nav .hide-sm { display: none; } }
 
-/* ---------- buttons ---------- */
+/* ---------- buttons (pills) ---------- */
 
 .btn {
-  display: inline-flex; align-items: center; gap: 9px;
-  padding: 13px 22px; border-radius: 11px;
-  font: 500 15px/1 var(--sans); text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 26px; border-radius: var(--pill);
+  font: 600 15px/1 var(--sans); text-decoration: none;
   background: var(--brand); color: var(--on-brand);
-  box-shadow: 0 1px 2px rgba(14,33,56,.12), 0 8px 20px -6px color-mix(in srgb, var(--brand) 45%, transparent);
+  border: 1px solid transparent;
   transition: transform .15s ease, background .15s ease;
 }
 .btn:hover { background: var(--brand-deep); transform: translateY(-1px); }
 .btn[aria-disabled="true"] {
   background: transparent; color: var(--ink-soft);
-  border: 1px solid var(--line); box-shadow: none; cursor: default;
+  border-color: var(--line); cursor: default;
 }
 .btn[aria-disabled="true"]:hover { transform: none; background: transparent; }
 .btn .soon {
-  font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
-  background: var(--sand); color: var(--sand-ink); padding: 3px 7px; border-radius: 5px;
+  font: 600 11px/1 var(--sans); letter-spacing: .06em; text-transform: uppercase;
+  background: var(--accent-wash); color: var(--accent-ink); padding: 4px 9px; border-radius: var(--pill);
 }
-.btn-ghost {
-  background: transparent; color: var(--ink-soft); box-shadow: none;
-  border: 1px solid var(--line);
-}
+.btn-ghost { background: transparent; color: var(--ink); border-color: var(--line); }
 .btn-ghost:hover { background: var(--surface); color: var(--ink); }
 
 /* ---------- section rhythm ---------- */
 
-section { padding: 76px 0; }
+section { padding: 80px 0; }
 .eyebrow {
   display: inline-block; margin-bottom: 14px;
-  font: 600 12px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase;
-  color: var(--sand-ink);
+  font: 600 12px/1 var(--sans); letter-spacing: .11em; text-transform: uppercase;
+  color: var(--accent-ink);
 }
-h2 { font-size: clamp(30px, 4vw, 40px); margin: 0 0 14px; line-height: 1.15; }
+h2 { font-size: clamp(32px, 4.2vw, 44px); margin: 0 0 14px; line-height: 1.12; }
 .lede { font-size: 18.5px; color: var(--ink-soft); max-width: 58ch; }
 
 /* ---------- hero ---------- */
 
-.hero { padding: 64px 0 88px; position: relative; }
+.hero { padding: 68px 0 92px; position: relative; }
 .hero::before {
-  content: ""; position: absolute; inset: -40% 20% auto -20%; height: 620px;
-  background: radial-gradient(ellipse at 30% 40%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 62%);
+  content: ""; position: absolute; inset: -40% 18% auto -22%; height: 660px;
+  background: radial-gradient(ellipse at 34% 46%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 64%);
   pointer-events: none;
 }
 .hero .wrap { position: relative; display: grid; gap: 64px; grid-template-columns: 1.05fr .95fr; align-items: center; }
 @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; gap: 48px; } }
 
-h1 { font-size: clamp(44px, 6.2vw, 68px); line-height: 1.04; margin: 0 0 20px; }
+h1 { font-size: clamp(46px, 6.4vw, 72px); line-height: 1.02; margin: 0 0 20px; }
 .hero .lede { font-size: 20px; margin-bottom: 30px; }
-.cta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.cta-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .cta-note { font-size: 14px; color: var(--ink-faint); }
 
-/* ---------- the product shot: a real render of the card ---------- */
+/* ---------- product shot ---------- */
 
 .shot { position: relative; }
 .checkout {
   background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
   padding: 26px 26px 150px; box-shadow: var(--shadow);
 }
-.checkout-row { display: flex; justify-content: space-between; font-size: 14.5px; color: var(--ink-soft); margin-bottom: 10px; }
-.checkout-total { display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; color: var(--ink); padding-top: 14px; border-top: 1px solid var(--line); }
+.checkout-row { display: flex; justify-content: space-between; font-size: 15px; color: var(--ink-soft); margin-bottom: 10px; }
+.checkout-total {
+  display: flex; justify-content: space-between; font-size: 16px; font-weight: 600; color: var(--ink);
+  padding-top: 14px; border-top: 1px solid var(--line);
+}
 .checkout-field { margin-top: 22px; display: flex; gap: 8px; }
 .checkout-field span {
-  flex: 1; height: 40px; border: 1px solid var(--line); border-radius: 9px;
-  background: var(--paper); display: flex; align-items: center; padding: 0 12px;
-  font-size: 14px; color: var(--ink-faint);
+  flex: 1; height: 42px; border: 1px solid var(--line); border-radius: var(--radius-sm);
+  background: var(--paper); display: flex; align-items: center; padding: 0 13px;
+  font: 500 14px var(--mono); color: var(--ink-faint);
 }
 .checkout-field b {
-  display: flex; align-items: center; padding: 0 16px; border-radius: 9px;
-  background: var(--ink); color: var(--paper); font: 500 14px var(--sans);
+  display: flex; align-items: center; padding: 0 18px; border-radius: var(--radius-sm);
+  background: var(--ink); color: var(--paper); font: 600 14px var(--sans);
 }
 
-/* The extension card, rebuilt in CSS so the page shows the actual design. */
+/* The extension card, as it renders on an ordinary light checkout. */
 .card {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 13px;
-  padding: 17px; box-shadow: var(--shadow-lg); font-size: 14px; line-height: 1.45;
-  max-width: 330px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 18px; box-shadow: var(--shadow-lg); font-size: 14px; line-height: 1.45;
+  max-width: 340px;
 }
 .card.floating { position: absolute; right: -22px; bottom: -70px; }
 @media (max-width: 520px) {
-  /* The card stacks instead of floating, so the checkout stops reserving room for it. */
   .checkout { padding-bottom: 70px; }
   .card.floating { position: static; margin: -46px auto 0; }
 }
 .card .badge {
-  display: inline-block; margin-bottom: 9px; padding: 3px 7px; border-radius: 5px;
-  background: var(--sand); color: var(--sand-ink); font: 600 10.5px/1 var(--sans); letter-spacing: .04em;
+  display: inline-block; margin-bottom: 10px; padding: 4px 9px; border-radius: var(--pill);
+  background: var(--accent-wash); color: var(--accent-ink); font: 600 10.5px/1 var(--sans); letter-spacing: .06em;
 }
 .card-head { display: flex; gap: 10px; align-items: flex-start; }
 .card .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); margin-top: 6px; flex: none; }
 .card h3 { font-family: var(--sans); font-weight: 600; font-size: 15px; margin: 0 0 3px; letter-spacing: 0; }
 .card p { font-size: 13px; color: var(--ink-soft); margin: 0; }
-.card .meta { margin-top: 10px; font-size: 11px; line-height: 1.5; color: var(--ink-faint); }
-.card .actions { display: flex; gap: 8px; margin-top: 15px; }
+.card .meta { margin-top: 10px; font-size: 11.5px; line-height: 1.5; color: var(--ink-faint); }
+.card .actions { display: flex; gap: 8px; margin-top: 16px; }
 .card .actions span {
-  padding: 9px 14px; border-radius: 9px; font: 500 13px/1 var(--sans);
+  padding: 10px 14px; border-radius: var(--radius-sm); font: 600 13px/1 var(--sans);
   background: var(--brand); color: var(--on-brand); flex: 1; text-align: center;
 }
 .card .actions span.sec { background: var(--surface); color: var(--ink-soft); border: 1px solid var(--line); flex: none; }
@@ -213,12 +210,12 @@ h1 { font-size: clamp(44px, 6.2vw, 68px); line-height: 1.04; margin: 0 0 20px; }
   counter-increment: step; content: counter(step);
   width: 38px; height: 38px; border-radius: 50%;
   display: grid; place-items: center;
-  font: 500 15px var(--sans); color: var(--brand);
-  background: var(--brand-wash);
+  font: 600 15px var(--mono); color: var(--ink-soft);
+  background: var(--tile);
 }
 .step h3 { font-family: var(--sans); font-size: 17px; font-weight: 600; margin: 6px 0 5px; letter-spacing: 0; }
 .step p { color: var(--ink-soft); font-size: 15.5px; margin: 0; }
-.step.key::before { background: var(--accent); color: #0e2138; }
+.step.key::before { background: var(--accent); color: #24180a; }
 
 /* ---------- trust columns ---------- */
 
@@ -232,14 +229,14 @@ h1 { font-size: clamp(44px, 6.2vw, 68px); line-height: 1.04; margin: 0 0 20px; }
 .panel ul { list-style: none; margin: 0; padding: 0; }
 .panel li { display: flex; gap: 11px; padding: 9px 0; font-size: 15px; color: var(--ink-soft); }
 .panel li::before { flex: none; width: 19px; height: 19px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 700; margin-top: 2px; }
-.can li::before  { content: "✓"; background: #e3f5ec; color: #0a7d49; }
-.cant li::before { content: "✕"; background: #fdeaea; color: #b3322e; }
+.can li::before  { content: "✓"; background: #dff2e6; color: #10663c; }
+.cant li::before { content: "✕"; background: #fbe4e2; color: #a32e29; }
 @media (prefers-color-scheme: dark) {
-  .can li::before  { background: #11301f; color: #58cf98; }
-  .cant li::before { background: #331616; color: #f08a86; }
+  .can li::before  { background: #16301f; color: #62cf95; }
+  .cant li::before { background: #341915; color: #f0918a; }
 }
 
-/* ---------- donation ---------- */
+/* ---------- donation band ---------- */
 
 .donation { background: var(--surface); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
 .donation .wrap { display: grid; gap: 56px; grid-template-columns: 1fr 340px; align-items: center; }
@@ -248,8 +245,8 @@ h1 { font-size: clamp(44px, 6.2vw, 68px); line-height: 1.04; margin: 0 0 20px; }
 /* ---------- notice ---------- */
 
 .notice {
-  background: var(--sand); border-radius: var(--radius); padding: 22px 26px;
-  font-size: 15.5px; color: var(--sand-ink); margin-top: 28px;
+  background: var(--accent-wash); border-radius: var(--radius); padding: 22px 26px;
+  font-size: 15.5px; color: var(--accent-ink); margin-top: 28px;
 }
 .notice strong { color: inherit; }
 
@@ -275,19 +272,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 28px; flex-wr
 footer nav { gap: 22px; }
 .fine { color: var(--ink-faint); font-size: 13.5px; max-width: 46ch; margin: 14px 0 0; }
 
-/* ---------- long-form pages (privacy, donations) ---------- */
+/* ---------- long-form pages ---------- */
 
 .doc { padding: 56px 0 96px; }
-.doc h1 { font-size: clamp(34px, 5vw, 46px); margin-bottom: 8px; }
-.doc h2 { font-size: 24px; margin: 44px 0 12px; }
+.doc h1 { font-size: clamp(36px, 5vw, 50px); margin-bottom: 8px; }
+.doc h2 { font-size: 26px; margin: 46px 0 12px; }
 .doc h3 { font-family: var(--sans); font-size: 16px; font-weight: 600; margin: 28px 0 8px; }
 .doc p, .doc li { color: var(--ink-soft); }
 .doc ul { padding-left: 0; list-style: none; }
 .doc ul li { padding: 7px 0 7px 26px; position: relative; }
-.doc ul li::before { content: ""; position: absolute; left: 6px; top: 16px; width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+.doc ul li::before { content: ""; position: absolute; left: 6px; top: 16px; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
 .doc .stamp { color: var(--ink-faint); font-size: 14px; margin-bottom: 36px; }
-.doc code { font: 13.5px var(--mono); background: var(--brand-wash); padding: 2px 6px; border-radius: 5px; color: var(--ink); }
+.doc code { font: 500 13.5px var(--mono); background: var(--tile); padding: 2px 7px; border-radius: 6px; color: var(--ink); }
+
+/* Ledger figures read as evidence, so they are set in mono. */
 table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
-th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
-th { font: 500 13px var(--sans); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-faint); }
-td { color: var(--ink-soft); }
+th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid var(--line); }
+th { font: 600 12px var(--sans); text-transform: uppercase; letter-spacing: .07em; color: var(--ink-faint); }
+td { color: var(--ink-soft); font-family: var(--mono); font-size: 14px; }

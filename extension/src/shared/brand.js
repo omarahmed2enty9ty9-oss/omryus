@@ -13,11 +13,14 @@ export const BRAND = {
 };
 
 /**
- * The palette, in one place.
+ * The palette for the INJECTED UI — the card that renders inside other people's
+ * checkouts. It deliberately stays on system fonts and neutral navy surfaces so
+ * it feels like part of the page rather than an advert.
  *
- * The injected card deliberately stays on system fonts and neutral surfaces: it
- * appears inside other people's checkouts and should feel like it belongs there,
- * not like an advert. The marketing site is where the brand has personality.
+ * The marketing site does NOT use these. It runs a warm porcelain palette with
+ * near-black ink, defined in site/style.css, because a dark-navy site reads as
+ * generic AI-startup and undercuts the product's plain-spoken positioning.
+ * The two share only the amber accent and the mark's navy.
  */
 export const PALETTE = {
   ink: '#12233B',

@@ -23,12 +23,19 @@ Rendering is done by **Chrome itself** (it looks for a binary in the same places
 `tools/launch-chrome.js`), so the shipped PNGs are exactly what a browser draws. ImageMagick is
 tempting here and wrong: without librsvg it silently drops strokes and circles.
 
-Colours live in `PALETTE` in `brand.js` and are mirrored in `site/style.css`:
-navy `#12233B` for primary actions, amber `#FCA429` as the accent, cool paper `#F4F9FA`.
+Two palettes, on purpose:
 
-The injected card deliberately stays on system fonts and neutral surfaces — it renders inside
-other people's checkouts and should look like it belongs there. The marketing site is where the
-brand has personality (Instrument Serif headings, uppercase Inter wordmark).
+| Surface | Palette | Why |
+|---|---|---|
+| Injected card (`PALETTE` in `brand.js`) | navy `#12233B`, amber `#FCA429`, cool paper | Renders inside other people's checkouts; should look native, not like an advert |
+| Marketing site (`site/style.css`) | porcelain `#FBF9F5`, near-black `#191722`, amber `#FCA429` | A dark-navy site reads as generic AI-startup and undercuts the plain-spoken positioning |
+
+They share the amber accent and the mark's navy, and nothing else. Site type is Instrument Serif
+(display), Hanken Grotesk (body) and Spline Sans Mono — the mono is used for the donation ledger
+and code chips, so figures read as evidence rather than marketing.
+
+`mark-small.svg` carries its own `prefers-color-scheme` block, so the favicon and site logo
+invert to a light hat on dark grounds without a second file or a `<picture>` swap.
 
 > **Status: pre-release.** There are no real affiliate partnerships and no real discount codes.
 > Everything shipped in `offers.json` is labelled `"source": "mock"` and the UI says so.

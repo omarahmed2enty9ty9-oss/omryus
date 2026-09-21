@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Omryus — teaser</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Instrument Serif";
+        src: url("assets/fonts/InstrumentSerif-Regular.woff2") format("woff2");
+        font-weight: 400;
+        font-style: normal;
+        font-display: block;
+      }
+      @font-face {
+        font-family: "Inter Var";
+        src: url("assets/fonts/Inter-Variable.woff2") format("woff2");
+        font-weight: 100 900;
+        font-style: normal;
+        font-display: block;
+      }
+
+      :root {
+        --paper: #0b1728;
+        --surface: #12213a;
+        --line: #23364f;
+        --ink: #eaf1f5;
+        --ink-soft: #a4b5c4;
+        --ink-meta: #8fa3b5;
+        --accent: #fcb04a;
+        --sand: #2e2413;
+        --sand-ink: #f0c680;
+        --on-brand: #0b1728;
+        --display: "Instrument Serif", Georgia, serif;
+        --sans: "Inter Var", system-ui, sans-serif;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--paper); }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; font-family: var(--sans); }
+
+      /* Untimed full-bleed layers need their own positioning. */
+      #bg { position: absolute; inset: 0; background: var(--paper); }
+      #glow {
+        position: absolute; left: -18%; top: 8%; width: 136%; height: 74%;
+        background: radial-gradient(ellipse at 42% 46%, rgba(252,176,74,0.16), rgba(252,176,74,0) 62%);
+      }
+
+      .inner { position: absolute; inset: 0; }
+
+      /* ---------- shared type ---------- */
+      .display { font-family: var(--display); color: var(--ink); font-weight: 400; letter-spacing: -0.01em; }
+      .line { display: block; }
+
+      .centered {
+        position: absolute; left: 96px; right: 96px; top: 50%;
+        transform: translateY(-50%); text-align: center;
+      }
+
+      .hook { font-size: 96px; line-height: 1.14; }
+      .sub { font-family: var(--sans); font-size: 36px; color: var(--ink-soft); margin-top: 34px; }
+
+      /* ---------- checkout mock ---------- */
+      .checkout {
+        position: absolute; left: 130px; width: 820px; top: 430px;
+        background: var(--surface); border: 2px solid var(--line); border-radius: 30px;
+        padding: 44px 46px 46px;
+      }
+      .row { display: flex; justify-content: space-between; font-size: 34px; color: var(--ink-soft); margin-bottom: 22px; }
+      .total {
+        display: flex; justify-content: space-between; font-size: 40px; font-weight: 600; color: var(--ink);
+        padding-top: 26px; border-top: 2px solid var(--line);
+      }
+      .field { display: flex; gap: 18px; margin-top: 38px; }
+      .fieldbox {
+        position: relative; flex: 1; height: 86px; border: 2px solid var(--line); border-radius: 18px;
+        background: var(--paper); display: flex; align-items: center; padding: 0 26px; font-size: 32px;
+      }
+      .fieldbox .ph { position: absolute; color: var(--ink-meta); }
+      .fieldbox .code { position: absolute; color: var(--ink); letter-spacing: 0.06em; font-weight: 600; }
+      .fieldbtn {
+        display: flex; align-items: center; padding: 0 34px; border-radius: 18px;
+        background: var(--ink); color: var(--on-brand); font-size: 32px; font-weight: 600;
+      }
+
+      /* ---------- the extension card ---------- */
+      .ocard {
+        position: absolute; left: 130px; width: 820px; top: 1150px; min-height: 470px;
+        background: var(--surface); border: 2px solid var(--line); border-radius: 28px;
+        padding: 38px 40px 40px;
+        box-shadow: 0 6px 12px rgba(0,0,0,.34), 0 56px 110px -28px rgba(0,0,0,.72);
+      }
+      .badge {
+        display: inline-block; background: var(--sand); color: var(--sand-ink);
+        font-size: 22px; font-weight: 600; letter-spacing: 0.07em; padding: 8px 14px; border-radius: 10px;
+        margin-bottom: 24px;
+      }
+      .ohead { display: flex; gap: 22px; align-items: flex-start; }
+      .dot { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); margin-top: 16px; flex: none; }
+      .ocard h3 { font-size: 44px; font-weight: 600; color: var(--ink); line-height: 1.2; margin-bottom: 12px; }
+      .ocard p { font-size: 34px; line-height: 1.42; color: var(--ink-soft); }
+      .ometa { font-size: 26px; line-height: 1.5; color: var(--ink-meta); margin-top: 26px; }
+      .oactions { display: flex; gap: 18px; margin-top: 34px; }
+      .btn-primary {
+        flex: 1; text-align: center; padding: 24px 0; border-radius: 18px;
+        background: var(--ink); color: var(--on-brand); font-size: 32px; font-weight: 600;
+      }
+      .btn-sec {
+        padding: 24px 40px; border-radius: 18px; border: 2px solid var(--line);
+        color: var(--ink-soft); font-size: 32px; font-weight: 500;
+      }
+
+      /* stacked card states */
+      .state { position: absolute; left: 40px; right: 40px; top: 38px; }
+      .state-done { top: 96px; }
+      .state-done h3 { margin-bottom: 16px; }
+      .code-chip {
+        display: inline-block; background: var(--paper); border: 2px solid var(--line);
+        border-radius: 12px; padding: 6px 16px; font-weight: 600; letter-spacing: 0.06em; color: var(--ink);
+      }
+
+      /* ---------- cursor ---------- */
+      #cursor { position: absolute; left: 0; top: 0; width: 54px; height: 54px; }
+      #ripple {
+        position: absolute; width: 130px; height: 130px; border-radius: 50%;
+        border: 4px solid var(--accent); left: 0; top: 0; opacity: 0;
+      }
+
+      /* ---------- outro ---------- */
+      .outro { position: absolute; left: 96px; right: 96px; top: 50%; transform: translateY(-50%); text-align: center; }
+      #mark { width: 260px; height: 260px; margin: 0 auto 44px; display: block; }
+      .wordmark {
+        font-size: 74px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+        color: var(--ink); margin-bottom: 40px;
+      }
+      .tagline { font-size: 68px; line-height: 1.2; }
+      .fine { font-family: var(--sans); font-size: 30px; color: var(--ink-meta); margin-top: 36px; }
+
+      .topline {
+        position: absolute; left: 96px; right: 96px; top: 190px; text-align: center;
+        font-family: var(--display); font-size: 62px; line-height: 1.22; color: var(--ink);
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="19.66"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="bg"></div>
+      <div id="glow"></div>
+
+      <!-- ============ Scene 1 — hook ============ -->
+      <section id="s1" class="clip" data-start="0" data-duration="3.67" data-track-index="0">
+        <div class="inner" id="s1-in">
+          <div class="centered">
+            <p class="display hook">
+              <span class="line">Free coupon extensions</span>
+              <span class="line">make money somehow.</span>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Scene 2 — the product doing its job ============ -->
+      <section id="s2" class="clip" data-start="3.27" data-duration="5.87" data-track-index="1">
+        <div class="inner" id="s2-in" data-layout-allow-overlap>
+          <div class="checkout">
+            <div class="row"><span>1 × Merino scarf</span><span>£48.00</span></div>
+            <div class="row"><span>1 × Wool hat</span><span>£22.00</span></div>
+            <div class="row"><span>Delivery</span><span>£3.50</span></div>
+            <div class="total"><span>Total</span><span>£73.50</span></div>
+            <div class="field">
+              <span class="fieldbox">
+                <span class="ph" id="s2-ph">Discount code</span>
+                <span class="code" id="s2-code">MOCK20</span>
+              </span>
+              <span class="fieldbtn">Apply</span>
+            </div>
+          </div>
+
+          <div class="ocard" id="s2-card">
+            <div class="state" id="s2-offer" data-layout-allow-overlap>
+              <div class="badge">EXAMPLE</div>
+              <div class="ohead">
+                <span class="dot"></span>
+                <div>
+                  <h3>20% off your order</h3>
+                  <p>We have a partner code for this store.</p>
+                </div>
+              </div>
+              <div class="ometa">Code last checked 20 Sep 2026. Using this code supports Omryus, at no extra cost to you.</div>
+              <div class="oactions">
+                <span class="btn-primary" id="s2-apply">Apply discount</span>
+                <span class="btn-sec">Dismiss</span>
+              </div>
+            </div>
+
+            <div class="state state-done" id="s2-done" data-layout-allow-overlap>
+              <div class="ohead">
+                <span class="dot"></span>
+                <div>
+                  <h3>Code inserted</h3>
+                  <p><span class="code-chip">MOCK20</span> is in the code box. Press the store's Apply button to confirm it.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="ripple"></div>
+          <svg id="cursor" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 2 L4 20 L9 15.5 L12 22 L15 20.5 L12 14.5 L19 14 Z" fill="#eaf1f5" stroke="#0b1728" stroke-width="1.2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- ============ Scene 3 — the awkward case ============ -->
+      <section id="s3" class="clip" data-start="8.74" data-duration="5.30" data-track-index="2">
+        <div class="inner" id="s3-in" data-layout-allow-overlap>
+          <p class="topline display" id="s3-line">
+            <span class="line">We'd rather give it away</span>
+            <span class="line">than pretend.</span>
+          </p>
+
+          <div class="checkout" id="s3-checkout">
+            <div class="row"><span>1 × Test Widget</span><span>£50.00</span></div>
+            <div class="row"><span>Delivery</span><span>Free</span></div>
+            <div class="total"><span>Total</span><span>£50.00</span></div>
+            <div class="field">
+              <span class="fieldbox"><span class="ph">No discount available</span></span>
+              <span class="fieldbtn">Apply</span>
+            </div>
+          </div>
+
+          <div class="ocard" id="s3-card">
+            <div class="state">
+              <div class="badge">EXAMPLE</div>
+              <div class="ohead">
+                <span class="dot"></span>
+                <div>
+                  <h3>Fund a donation with your order</h3>
+                  <p>This code won't lower your price.</p>
+                </div>
+              </div>
+              <div class="ometa">We donate 100% of the commission to Medical Aid for Palestinians and keep none of it.</div>
+              <div class="oactions">
+                <span class="btn-primary">Add the code</span>
+                <span class="btn-sec">No thanks</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Scene 4 — restraint ============ -->
+      <section id="s4" class="clip" data-start="13.64" data-duration="3.14" data-track-index="3">
+        <div class="inner" id="s4-in">
+          <div class="centered">
+            <p class="display" id="s4-head" style="font-size: 88px; line-height: 1.16">
+              <span class="line">No server.</span>
+              <span class="line">No account.</span>
+              <span class="line">No tracking.</span>
+            </p>
+            <p class="sub" id="s4-sub">Nothing leaves your browser.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Scene 5 — outro ============ -->
+      <section id="s5" class="clip" data-start="16.38" data-duration="3.28" data-track-index="4">
+        <div class="inner" id="s5-in">
+          <div class="outro">
+            <img id="mark" src="assets/img/mark.svg" alt="Omryus" />
+            <div class="wordmark" id="s5-word">Omryus</div>
+            <p class="display tagline" id="s5-tag">Find discounts while you shop.</p>
+            <p class="fine" id="s5-fine">Free Chrome extension. Coming soon.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ audio ============ -->
+      <audio id="bgm" src="assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3"
+             data-start="0" data-duration="19.66" data-track-index="10" data-volume="0.3"></audio>
+      <audio id="sfx-card" src="assets/sfx/interface/drop_001.ogg"
+             data-start="3.82" data-duration="0.11" data-track-index="11" data-volume="0.6"></audio>
+      <audio id="sfx-click" src="assets/sfx/ui/mouseclick1.ogg"
+             data-start="6.56" data-duration="0.06" data-track-index="12" data-volume="0.6"></audio>
+      <audio id="sfx-code" src="assets/sfx/interface/drop_002.ogg"
+             data-start="7.09" data-duration="0.19" data-track-index="13" data-volume="0.55"></audio>
+      <audio id="sfx-bell" src="assets/sfx/impact/impactBell_heavy_000.ogg"
+             data-start="17.42" data-duration="1.48" data-track-index="14" data-volume="0.62"></audio>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      const E = "power3.out";
+
+      /* ---------------- Scene 1 — hook (0 → 3.27, unscored) ---------------- */
+      tl.set("#s1-in", { opacity: 1 }, 0);
+      tl.fromTo("#s1 .line",
+        { opacity: 0, y: 34 },
+        { opacity: 1, y: 0, duration: 0.55, ease: E, stagger: 0.14 }, 0.22);
+      // settled 0.91 → 3.27 = 2.36s hold
+      tl.to("#s1-in", { opacity: 0, duration: 0.4, ease: "none" }, 3.27);
+
+      /* ---------------- Scene 2 — product (3.27 → 8.74) ---------------- */
+      tl.fromTo("#s2-in", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, 3.27);
+      tl.fromTo("#s2 .checkout",
+        { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: E }, 3.32);
+
+      // card slide-in  // beat-grid: 3.82s
+      tl.set("#s2-done", { opacity: 0 }, 0);
+      tl.set("#s2-code", { opacity: 0 }, 0);
+      tl.fromTo("#s2-card",
+        { opacity: 0, y: 150 }, { opacity: 1, y: 0, duration: 0.62, ease: E }, 3.82);
+
+      // cursor travels to the Apply button, then clicks  // beat-grid: 6.56s
+      tl.set("#cursor", { x: 980, y: 1760, opacity: 0 }, 0);
+      tl.to("#cursor", { opacity: 1, duration: 0.25, ease: "none" }, 5.45);
+      tl.to("#cursor", { x: 420, y: 1545, duration: 0.95, ease: "power2.inOut" }, 5.5);
+      tl.to("#s2-apply", { scale: 0.96, duration: 0.09, ease: "power2.out" }, 6.56);
+      tl.to("#s2-apply", { scale: 1, duration: 0.22, ease: "power2.out" }, 6.65);
+      tl.fromTo("#ripple",
+        { x: 356, y: 1481, scale: 0.35, opacity: 0.85 },
+        { scale: 1.5, opacity: 0, duration: 0.5, ease: "power2.out" }, 6.56);
+
+      // the code lands in the store's field  // beat-grid: 7.09s
+      tl.to("#s2-ph", { opacity: 0, duration: 0.14, ease: "none" }, 7.05);
+      tl.fromTo("#s2-code",
+        { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.3, ease: E }, 7.09);
+      tl.to("#cursor", { opacity: 0, duration: 0.3, ease: "none" }, 7.15);
+      // card swaps to the confirmation state
+      tl.to("#s2-offer", { opacity: 0, duration: 0.28, ease: "none" }, 7.12);
+      tl.fromTo("#s2-done",
+        { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.36, ease: E }, 7.3);
+
+      tl.to("#s2-in", { opacity: 0, duration: 0.4, ease: "none" }, 8.74);
+
+      /* ---------------- Scene 3 — the awkward case (8.74 → 13.64) ---------------- */
+      tl.set("#s3-in", { opacity: 1 }, 0);
+      tl.fromTo("#s3-checkout",
+        { opacity: 0, y: 22 }, { opacity: 1, y: 0, duration: 0.45, ease: E }, 8.80);
+      // donation card lands  // beat-locked: 9.29s (strongCue 0.97)
+      tl.fromTo("#s3-card",
+        { opacity: 0, y: 130 }, { opacity: 1, y: 0, duration: 0.58, ease: E }, 9.29);
+      // the site's own line, after the card has been read
+      tl.fromTo("#s3 .topline .line",
+        { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.5, ease: E, stagger: 0.12 }, 11.30);
+      tl.to("#s3-in", { opacity: 0, duration: 0.4, ease: "none" }, 13.64);
+
+      /* ---------------- Scene 4 — restraint (13.64 → 16.38) ---------------- */
+      tl.fromTo("#s4-in", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "none" }, 13.64);
+      tl.fromTo("#s4-head .line",
+        { opacity: 0, y: 28 }, { opacity: 1, y: 0, duration: 0.45, ease: E, stagger: 0.11 }, 13.84);
+      tl.fromTo("#s4-sub",
+        { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "none" }, 14.38);
+      tl.to("#s4-in", { opacity: 0, duration: 0.35, ease: "none" }, 16.38);
+
+      /* ---------------- Scene 5 — outro (16.38 → 19.66) ---------------- */
+      tl.fromTo("#s5-in", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "none" }, 16.38);
+      // the mark settles on the strong cue  // beat-locked: 17.47s (strongCue 0.99)
+      tl.fromTo("#mark",
+        { opacity: 0, scale: 0.86 }, { opacity: 1, scale: 1, duration: 0.52, ease: E }, 16.95);
+      tl.fromTo("#s5-word",
+        { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.42, ease: E }, 17.62);
+      tl.fromTo("#s5-tag",
+        { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.48, ease: E }, 17.92);
+      tl.fromTo("#s5-fine",
+        { opacity: 0 }, { opacity: 1, duration: 0.45, ease: "none" }, 18.40);
+
+      /* ---------------- glow breathing + music ---------------- */
+      tl.fromTo("#glow", { opacity: 0.55 }, { opacity: 1, duration: 3.2, ease: "sine.inOut", yoyo: true, repeat: 5 }, 0);
+
+      tl.fromTo("#bgm", { volume: 0 }, { volume: 0.3, duration: 0.6, ease: "none" }, 0);
+      tl.to("#bgm", { volume: 0, duration: 1.3, ease: "none" }, 18.3);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
