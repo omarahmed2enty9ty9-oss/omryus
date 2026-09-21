@@ -112,18 +112,23 @@ test('a donation offer is never described as a discount', () => {
     'must say plainly that the price does not change');
 });
 
-test('a donation offer names the charity and says we keep none of it', () => {
+test('a donation offer names the charity and scopes the claim to this code', () => {
   showCard(DONATION_OFFER, { onApply: noop, onDismiss: noop });
   const text = document.getElementById(HOST_ID).shadowRoot.textContent;
   assert.match(text, /Medical Aid for Palestinians/, 'must name where the money goes');
-  assert.match(text, /keep none of it|100%/i, 'must say we keep none of the commission');
+  assert.match(text, /keep none of it/i, 'must say we keep none of this code’s commission');
+  // "we keep none of it" on its own reads as though Omryus never earns anything.
+  // It does earn on codes that actually discount something, so the phrase must stay
+  // tethered to THIS code by the clause before it, never float free.
+  assert.match(text, /won’t lower your price — so we keep none of it/i,
+    'the claim must stay scoped to this code');
 });
 
 test('a donation offer thanks the shopper without claiming a saving', () => {
   const card = showCard(DONATION_OFFER, { onApply: noop, onDismiss: noop });
   card.setState('success', { code: 'GIVE100', clicked: true });
   const text = document.getElementById(HOST_ID).shadowRoot.textContent;
-  assert.match(text, /funds a donation/i);
+  assert.match(text, /commission on this order goes to/i);
   assert.doesNotMatch(text, /confirms the discount/i, 'there is no discount to confirm');
 });
 

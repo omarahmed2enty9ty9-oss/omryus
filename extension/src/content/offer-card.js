@@ -80,11 +80,11 @@ export function showCard(offer, { onApply, onDismiss }) {
       // A donation-funded code saves the shopper nothing, so it must never be
       // described as a discount — not in the wording, not on the button.
       const body = offer.isDonation
-        ? `<p>This code won’t lower your price. If you use it, we donate every penny of
-             the commission to ${escapeHtml(DONATION.charity)} and keep none of it.</p>`
+        ? `<p>This code won’t lower your price — so we keep none of it.
+             The whole commission goes to ${escapeHtml(DONATION.charity)}.</p>`
         : `<p>We have a partner code for ${escapeHtml(offer.merchantName)}.</p>`;
       const disclosure = offer.isDonation
-        ? `We earn a commission from ${escapeHtml(offer.merchantName)} and pass 100% of it on.`
+        ? `We pass on the whole commission for codes like this one. Codes that do save you money are how ${BRAND.name} stays free.`
         : `Using this code supports ${BRAND.name}, at no extra cost to you.`;
 
       card.innerHTML = `
@@ -119,7 +119,7 @@ export function showCard(offer, { onApply, onDismiss }) {
         ? (data.clicked ? 'We pressed Apply for you.' : 'Press the store’s Apply button to confirm it.')
         : (data.clicked ? 'We pressed Apply for you — the store confirms the discount.' : 'Press the store’s Apply button to confirm it.');
       const thanks = offer.isDonation
-        ? `<p class="meta">Thank you — your order now funds a donation to ${escapeHtml(DONATION.charity)}.</p>`
+        ? `<p class="meta">Thank you — the commission on this order goes to ${escapeHtml(DONATION.charity)}.</p>`
         : '';
       card.innerHTML = `
         <button class="close" aria-label="Close">&times;</button>

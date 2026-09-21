@@ -18,7 +18,7 @@ function renderUnsupported() {
 function renderOffer(offer) {
   const badge = offer.source === 'mock' ? '<div class="badge">MOCK OFFER — DEMO DATA</div>' : '';
   const body = offer.isDonation
-    ? `This code won't lower your price. We donate 100% of the commission to ${DONATION.charity}.`
+    ? `This code won't lower your price — so we keep none of it. The whole commission goes to ${DONATION.charity}.`
     : `Partner code available for ${offer.merchantName}.`;
   statusEl.innerHTML = `${badge}
     <h1>${offer.title}</h1>

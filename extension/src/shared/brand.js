@@ -40,7 +40,10 @@ export const PALETTE = {
  * Some partner codes carry no discount — they only track attribution. Chrome Web
  * Store policy permits inserting one of those only when the shopper gets a
  * "discount, cashback, or donation"; commission kept by us is not a benefit to
- * them. So these codes fund a donation instead, and we keep none of it.
+ * them. So these codes fund a donation instead: we keep no commission on a code
+ * that saved the shopper nothing. Codes that DO discount something are ordinary
+ * revenue — that distinction is the whole point, so never let copy blur it into
+ * "we keep none of it", which reads as though Omryus never earns anything.
  *
  * This is a pledge about our conduct, not an automatic transfer: commission
  * lands in our account and we forward it. Say so honestly, and publish what was

@@ -206,7 +206,13 @@ export const DONATION = {
    on the site is enough, and it is the only thing that makes the claim verifiable.
 2. **`share` should stay at 1.** The donation is what makes these codes permissible. The more of it
    you keep, the closer it gets to the thing the policy prohibits, and "we donate some of it" is a
-   much weaker argument than "we keep none of it".
+   much weaker argument than "when there isn't a discount, we keep none of it".
+
+   **Keep that condition attached wherever the phrase appears.** "We keep none of it" on its own
+   reads as though Omryus never earns anything, which is false — commission on codes that *do*
+   discount something is ordinary revenue and is how the extension stays free. Copy that blurs
+   the two is a transparency bug in a product whose whole argument is transparency. There is a
+   test in `test/offer-card.test.js` asserting the card keeps the phrase tethered.
 3. **The affiliate programme has to allow it.** Inserting a tracking-only code at checkout is the
    pattern merchants call commission hijacking, and plenty of networks ban extension publishers
    for it regardless of what Chrome permits. Ask before you build a flow around it.

@@ -139,7 +139,8 @@ export function findOffersForUrl(offers, url, now = Date.now()) {
  * prohibited however clearly we disclose it and however explicitly they consent.
  *
  * 'donation' qualifies because the donation is the benefit — which is only true
- * while we actually keep none of it. See DONATION in shared/brand.js.
+ * while we keep none of the commission on THESE codes. Commission on codes that
+ * do discount something is ordinary revenue. See DONATION in shared/brand.js.
  *
  * See resolveAttribution() in background/affiliate.js, which refuses the rest.
  */
