@@ -1,4 +1,4 @@
-# Handoff — 22 Sep 2026
+# Handoff — updated 22 Sep 2026 (evening)
 
 State of Omryus at the end of the first build session, and what the next one should pick up.
 Read `README.md` for how things work; this file is only what you can't infer from the code.
@@ -15,6 +15,8 @@ Read `README.md` for how things work; this file is only what you can't infer fro
 | Tests | `npm test` — 63 passing |
 | Extension | Builds to `dist/` with `npm run build`; `npm run chrome` launches it |
 | Teaser video | `brag-output-2026-09-21-121428/brag.mp4` (gitignored) |
+| Brand assets | `brand/` — logo PNGs on white, `npm run logos` |
+| Secrets | `.env` (gitignored, chmod 600). `.env.example` documents the keys. |
 
 The extension works end to end against the mock checkouts. It has never been published, has no
 real offers, and has earned nothing.
@@ -32,6 +34,10 @@ action* and a *real user benefit* before any affiliate code is added, and Awin p
 publishers on "Soft Click" status, which forbids overwriting another affiliate's cookie. Both are
 satisfied structurally rather than by promise. `attributionMode: "link"` exists in the schema and
 is refused at runtime in `background/affiliate.js`.
+
+> ⚠ **This one is now an open question, not a settled constraint.** Awin pays on a click, not on
+> the code, so code-only attribution earns nothing there. See "Awin: the attribution problem"
+> below before assuming this stays as it is. Constraints 2 and 3 are not in question.
 
 **2. No affiliate code without a benefit to the shopper.** `resolveAttribution()` refuses any
 offer failing `hasUserBenefit()`, and the check sits *above* the provider lookup so a future
@@ -54,14 +60,59 @@ commission on codes that do discount something is the revenue model. There's a t
 
 | Waiting on | For | Status |
 |---|---|---|
-| Awin | Publisher approval, then per-advertiser opt-in | Application in progress |
-| A charity | Written agreement before naming them | Draft email sitting in Gmail, unsent |
+| **A domain** | Everything below | **Not bought. This is now the top blocker — see below.** |
+| Awin | Per-advertiser opt-in | Publisher account live: **ID 3102715**, 0 programmes joined |
+| impact.com | Partner approval | **DECLINED 22 Sep**, account 7826308 — appealable |
+| A charity | Written agreement before naming them | Draft email in Gmail, unsent |
 | Chrome Web Store | Listing approval | Not submitted |
 
-**Awin is four gates, not one:** publisher signup → extension submitted to their Network Quality
-Team for review *before going live* → join individual programmes → **documented opt-in from each
-advertiser separately**. Network approval does not grant advertiser approval. Their guideline:
+### The domain is the blocker
+
+The site is on `omarahmed2enty9ty9-oss.github.io`. impact.com declined the application
+**eleven minutes** after acknowledging it — an automated filter, not a human — and the most
+likely trigger is a free subdomain with no traffic or history. Their Media Partner Service
+Agreement (the only "reason" given) does **not** prohibit browser extensions, plugins, toolbars or
+coupon publishers; it bans adware, cookie stuffing and fake redirects, none of which apply. So the
+rejection was on signals, not substance. Buy a domain and reapply.
+
+### Awin: the attribution problem
+
+**This is the biggest open design question.** Every advertiser record from the Awin API carries:
+
+```
+"clickThroughUrl": "https://www.awin1.com/awclick.php?mid=<advertiser>&id=3102715"
+```
+
+Awin pays on a **click that sets a cookie**, not on the code. A voucher code tells the shopper
+what to type; the cookie tells Awin who to pay. As built — code-only, no links, no cookies —
+Omryus would insert codes that work for shoppers and **earn nothing**.
+
+Two ways out, and it is a real decision, not a detail:
+
+- **Fire the affiliate link on the user's "Apply discount" click**, then insert the code. Still
+  disclosed, still an explicit user action, still a real discount — so it reads as Chrome-policy
+  compliant. Awin's mandatory **Soft Click** status for extension publishers blocks overwriting
+  another affiliate's existing cookie at the network level, which enforces the no-hijacking
+  principle better than self-restraint did. This means un-refusing `attributionMode: 'link'` and
+  removing "no tracking cookies" from the site copy.
+- **Stay code-only** and earn only from advertisers doing publisher-unique codes reconciled by
+  hand. Principled, rare, does not scale.
+
+Ask Awin directly whether any advertisers support code-level attribution for extension publishers
+before rewriting anything. Their answer settles it.
+
+**Awin is four gates, not one:** publisher signup ✅ → extension submitted to their Network Quality
+Team for review *before going live* → join programmes → **documented opt-in from each advertiser
+separately**. Network approval does not grant advertiser approval. Their guideline:
 https://success.awin.com/s/article/Network-s-Guideline-for-Publishers-with-Downloadable-Software-or-Browser-Extension
+
+### Networks that attribute on the code itself
+
+impact.com supports promo-code attribution natively (a unique code maps to one partner, no click
+needed) — which is why it is worth reapplying to. Merchant-side Shopify tools (Refersion,
+UpPromote, Partnero, GoAffPro) all do cookie-free code attribution too, but they are per-merchant
+programmes rather than networks, so there is no cross-merchant feed. Small Shopify brands are the
+realistic early wins: code attribution is native and they are likelier to say yes.
 
 ---
 
@@ -74,8 +125,16 @@ Live and presentable, but carrying placeholders.
 - **`omryus.example` appears in 4 files** (`site/index.html`, `site/privacy.html`,
   `site/donations.html`, `extension/src/shared/brand.js`). Contact links are dead addresses. The
   user chose to leave these until a domain exists — don't "fix" them with a guess.
-- **No custom domain.** ~£10/yr, and it's on the critical path for looking legitimate to Awin and
-  charities. Pages supports a CNAME once bought.
+- **No custom domain — this already cost an impact.com application.** Buy one, point Pages at it
+  with a CNAME, then reapply to Impact.
+- **The site now carries impact.com's tracking tag**, consent-gated by `site/consent.js`. It ships
+  as `<script type="text/plain" data-consent="impact">` so the network can still verify ownership
+  by finding it in the source, but it stays inert until someone accepts. Do not make it fire
+  unconditionally: UK PECR requires consent first, and refusing must be as easy as accepting.
+- **Privacy claims are scoped, deliberately.** They used to say "Omryus has no analytics service",
+  which the tag made false. They now say *the extension* has none (true, and the claim that
+  matters) and `privacy.html` has a "What this website loads" section owning the tag. Keep that
+  distinction if you touch the copy.
 - **Supported stores section** says "None yet, and we won't pretend otherwise." Keep it that way
   until real partnerships exist.
 - Possible work: Open Graph / Twitter card tags (there are none, so shared links look bare), a
@@ -143,6 +202,18 @@ npm run chrome        # Chrome with the extension loaded
 Chrome for Testing lives in `~/.cache/omryus-chrome/` (there is no system Chrome on this machine);
 `tools/launch-chrome.js` finds it. The profile persists between runs so dismissals and counters
 survive a restart — `npm run chrome -- --fresh` wipes it.
+
+Secrets live in `.env` (gitignored, chmod 600) — Awin and impact.com tokens, with account IDs in
+the comments. `.env.example` documents the keys. **The repo is public**, so never commit the real
+file; both tokens were pasted into a chat during the first session and should be rotated.
+
+Query the Awin API with:
+
+```bash
+set -a && . ./.env && set +a
+curl -s -H "Authorization: Bearer $AWIN_API_TOKEN" \
+  "https://api.awin.com/publishers/$AWIN_PUBLISHER_ID/programmes?relationship=notjoined" | head -c 400
+```
 
 The single highest-value thing that isn't code: the 10–20 person test in `VALIDATION.md`. It's the
 only item on the critical path that doesn't depend on Awin, a charity, or Google.

@@ -7,3 +7,8 @@ mock-store/_harness.js
 # Rendered brag videos and their vendored audio — build artifacts, not source.
 brag-output/
 brag-output-*/
+
+# Secrets. The repo is public — a committed token is scraped within minutes.
+.env
+.env.*
+!.env.example
