@@ -113,6 +113,9 @@ touch the manifest, HTML or `offers.json`).
 
 ---
 
+**Picking this up after a break?** `HANDOFF.md` has current state, what's blocked on whom, and
+the decisions already made so you don't re-litigate them.
+
 ## Architecture in one paragraph
 
 The **service worker** owns all the rules: which merchants we support, which offers are live, what
