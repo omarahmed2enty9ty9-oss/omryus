@@ -11,7 +11,8 @@
     "mock": "node mock-store/server.js",
     "test": "node --test test/*.test.js",
     "chrome": "node tools/launch-chrome.js",
-    "deploy": "git subtree push --prefix site origin gh-pages"
+    "deploy": "git subtree push --prefix site origin gh-pages",
+    "logos": "node tools/make-logos.js"
   },
   "devDependencies": {
     "esbuild": "^0.28.2",
