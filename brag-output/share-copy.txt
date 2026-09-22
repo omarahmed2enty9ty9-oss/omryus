@@ -1,7 +1,0 @@
-Every free coupon extension makes money somehow. Omryus says how.
-
-It offers partner discount codes at checkout and does nothing until you click. When a code
-wouldn't lower your price, it says so instead of pretending — and 100% of that commission
-goes to Medical Aid for Palestinians.
-
-No server, no account, no tracking. Free Chrome extension, coming soon.

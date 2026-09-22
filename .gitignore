@@ -3,3 +3,7 @@ dist/
 *.zip
 .DS_Store
 mock-store/_harness.js
+
+# Rendered brag videos and their vendored audio — build artifacts, not source.
+brag-output/
+brag-output-*/
