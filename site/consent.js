@@ -39,8 +39,8 @@
     bar.innerHTML =
       '<p>This site loads our affiliate network\'s tracking tag, which may set cookies. ' +
       'It verifies we own the site and credits referrals. ' +
-      '<strong>The extension itself never does this</strong> — ' +
-      '<a href="privacy.html#this-website">what we load and why</a>.</p>' +
+      '<strong>The extension itself never does this.</strong> ' +
+      '<a href="privacy.html#this-website">What we load and why</a>.</p>' +
       '<div class="consent-actions">' +
       '<button type="button" class="consent-no">Decline</button>' +
       '<button type="button" class="consent-yes">Accept</button>' +

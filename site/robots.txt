@@ -1,0 +1,6 @@
+# Every crawler is welcome, AI search and training bots included. This is a public
+# product site and we would rather be quoted accurately than not at all.
+User-agent: *
+Allow: /
+
+Sitemap: https://omryus.com/sitemap.xml

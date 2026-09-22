@@ -121,10 +121,20 @@ realistic early wins: code attribution is native and they are likelier to say ye
 
 Live on omryus.com.
 
-- **`support@omryus.com` has no MX records**, so mail to it bounces — and `privacy.html` names it
-  as the contact for data requests. Set up Cloudflare Email Routing to forward it to a real inbox.
+- **Email:** Cloudflare Email Routing forwards `support@` and `omar@omryus.com` to the owner's
+  Gmail (receive only). Sending uses Gmail's "Send mail as" through `smtp.gmail.com`, so outgoing
+  mail is DKIM-signed by gmail.com, not omryus.com. **Don't add a strict DMARC policy**
+  (`p=quarantine`/`reject`) — it would bounce those replies. A real mailbox is the upgrade path.
 - **`site/CNAME` holds the custom domain.** Deleting it makes Pages drop `omryus.com` on the next
   deploy. Keep the Cloudflare records grey-cloud (DNS only); proxying them breaks Pages' cert.
+- **Google Search Console** owns `omryus.com` as a Domain property, verified by a
+  `google-site-verification=` TXT record on the apex. Removing that record drops the verification.
+- **SEO basics are in place:** canonical and Open Graph tags on every page, `og.png` (1200×630),
+  `sitemap.xml`, `robots.txt` (all crawlers allowed, AI bots included, on purpose), and
+  Organization + WebSite JSON-LD on the homepage. Audited with `nurkamol/seo-audit` and
+  `openairlabs/seo-aeo-audit`. The AEO tool's remaining asks (Wikidata entry, `sameAs` profiles,
+  `llms.txt`) were declined: none exist yet and faking them is score-chasing. Security headers
+  can't be set on GitHub Pages.
 - **The site now carries impact.com's tracking tag**, consent-gated by `site/consent.js`. It ships
   as `<script type="text/plain" data-consent="impact">` so the network can still verify ownership
   by finding it in the source, but it stays inert until someone accepts. Do not make it fire
