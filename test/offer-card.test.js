@@ -112,10 +112,10 @@ test('a donation offer is never described as a discount', () => {
     'must say plainly that the price does not change');
 });
 
-test('a donation offer names the charity and scopes the claim to this code', () => {
+test('a donation offer scopes the claim to this code', () => {
   showCard(DONATION_OFFER, { onApply: noop, onDismiss: noop });
   const text = document.getElementById(HOST_ID).shadowRoot.textContent;
-  assert.match(text, /Medical Aid for Palestinians/, 'must name where the money goes');
+  assert.match(text, /goes to charity/i, 'must say where the money goes');
   assert.match(text, /keep none of it/i, 'must say we keep none of this code’s commission');
   // "we keep none of it" on its own reads as though Omryus never earns anything.
   // It does earn on codes that actually discount something, so the phrase must stay

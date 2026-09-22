@@ -5,7 +5,7 @@
  * cannot break the store. It never covers the page, never blocks clicks
  * elsewhere, and always has a dismiss button.
  */
-import { BRAND, DOM_PREFIX, DONATION } from '../shared/brand.js';
+import { BRAND, DOM_PREFIX, DONATION, donationRecipient } from '../shared/brand.js';
 
 const HOST_ID = `${DOM_PREFIX}-offer-card`;
 
@@ -81,7 +81,7 @@ export function showCard(offer, { onApply, onDismiss }) {
       // described as a discount — not in the wording, not on the button.
       const body = offer.isDonation
         ? `<p>This code won’t lower your price — so we keep none of it.
-             The whole commission goes to ${escapeHtml(DONATION.charity)}.</p>`
+             The whole commission goes to ${escapeHtml(donationRecipient())}.</p>`
         : `<p>We have a partner code for ${escapeHtml(offer.merchantName)}.</p>`;
       const disclosure = offer.isDonation
         ? `We pass on the whole commission for codes like this one. Codes that do save you money are how ${BRAND.name} stays free.`
@@ -119,7 +119,7 @@ export function showCard(offer, { onApply, onDismiss }) {
         ? (data.clicked ? 'We pressed Apply for you.' : 'Press the store’s Apply button to confirm it.')
         : (data.clicked ? 'We pressed Apply for you — the store confirms the discount.' : 'Press the store’s Apply button to confirm it.');
       const thanks = offer.isDonation
-        ? `<p class="meta">Thank you — the commission on this order goes to ${escapeHtml(DONATION.charity)}.</p>`
+        ? `<p class="meta">Thank you — the commission on this order goes to ${escapeHtml(donationRecipient())}.</p>`
         : '';
       card.innerHTML = `
         <button class="close" aria-label="Close">&times;</button>

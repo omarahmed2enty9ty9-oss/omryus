@@ -56,7 +56,28 @@ export const DONATION = {
   charity: 'Medical Aid for Palestinians',
   url: 'https://www.map.org.uk/',
   share: 1, // fraction of commission donated. 1 = all of it.
+
+  /**
+   * Whether the charity has agreed in writing to be named.
+   *
+   * Naming a charity in marketing makes us a "commercial participator" under the
+   * Charities Act 1992, which requires a written agreement with them BEFORE the
+   * arrangement starts. Until that is signed we may still donate — anyone may
+   * give a charity money — but we may not advertise using their name.
+   *
+   * Flip this to true only when the agreement exists. Everything user-facing
+   * reads it, so the name cannot leak out early by someone editing one string.
+   */
+  agreed: false,
 };
+
+/**
+ * What to call the recipient in user-facing copy.
+ * Falls back to an unnamed description until DONATION.agreed is true.
+ */
+export function donationRecipient() {
+  return DONATION.agreed ? DONATION.charity : 'charity';
+}
 
 // Prefix for anything we put into the page, so it can never collide with the site.
 export const DOM_PREFIX = 'omryus';

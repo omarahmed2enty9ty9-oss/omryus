@@ -6,7 +6,7 @@
  * If nothing answers, the site is not one we support — and we never learn what
  * site it was.
  */
-import { BRAND, DONATION } from '../shared/brand.js';
+import { BRAND, donationRecipient } from '../shared/brand.js';
 
 const statusEl = document.getElementById('status');
 
@@ -18,7 +18,7 @@ function renderUnsupported() {
 function renderOffer(offer) {
   const badge = offer.source === 'mock' ? '<div class="badge">MOCK OFFER — DEMO DATA</div>' : '';
   const body = offer.isDonation
-    ? `This code won't lower your price — so we keep none of it. The whole commission goes to ${DONATION.charity}.`
+    ? `This code won't lower your price — so we keep none of it. The whole commission goes to ${donationRecipient()}.`
     : `Partner code available for ${offer.merchantName}.`;
   statusEl.innerHTML = `${badge}
     <h1>${offer.title}</h1>

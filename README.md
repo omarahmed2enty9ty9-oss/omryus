@@ -299,7 +299,8 @@ late-rendering, shadow DOM, no-coupon-box, and a non-cart page that should stay 
 `site/` is five static files — landing page, privacy policy, the donation ledger, the stylesheet
 and the icon. No build step, no framework. Any host works:
 
-- **GitHub Pages** — push the repo, Settings → Pages → deploy from branch, folder `/site`.
+- **GitHub Pages** — `.github/workflows/pages.yml` is ready. Push the repo, then set
+  Settings → Pages → Source to **GitHub Actions**. Every push that touches `site/` redeploys.
 - **Netlify / Cloudflare Pages** — drag the `site/` folder in, or connect the repo with publish
   directory `site` and no build command.
 
@@ -309,6 +310,19 @@ and search `site/` for `omryus.example` — the contact addresses need the same 
 `donations.html` is the public ledger. It currently says nothing has been donated, which is true.
 Do not make a donation claim anywhere — site, store listing or extension — without keeping it
 current; an unverifiable claim is worse than no claim.
+
+### Naming the charity
+
+**The site and extension deliberately name no charity yet.** Naming one in marketing makes us a
+commercial participator under the Charities Act 1992, which requires a written agreement with the
+charity *before* the arrangement starts. Donating without naming them is fine; advertising with
+their name is not.
+
+The gate is `DONATION.agreed` in `extension/src/shared/brand.js`. It is `false`, and every piece
+of user-facing copy reads `donationRecipient()` rather than the name. **Flip it to `true` only
+when the agreement is signed** — that single change names the charity across the extension at
+once, and `test/donation-naming.test.js` fails if the name appears on the site while the flag is
+still false.
 
 ---
 
