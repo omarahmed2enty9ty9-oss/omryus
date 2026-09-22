@@ -300,8 +300,15 @@ late-rendering, shadow DOM, no-coupon-box, and a non-cart page that should stay 
 and the icon. No build step, no framework. Any host works:
 
 - **GitHub Pages** — live at <https://omarahmed2enty9ty9-oss.github.io/omryus/>.
-  `.github/workflows/pages.yml` redeploys on every push that touches `site/`; Pages is already
-  set to the **GitHub Actions** source. Run it by hand from the Actions tab if needed.
+  Pages serves the `gh-pages` branch, which holds the contents of `site/`. Redeploy with:
+
+  ```bash
+  npm run deploy
+  ```
+
+  (That is `git subtree push --prefix site origin gh-pages`.) A GitHub Actions workflow would be
+  tidier, but Actions would not register the workflow on this account, and a branch deploy has
+  no such dependency. Switch to Actions later if you want to.
 - **Netlify / Cloudflare Pages** — drag the `site/` folder in, or connect the repo with publish
   directory `site` and no build command.
 
