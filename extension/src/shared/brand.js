@@ -7,9 +7,9 @@ export const BRAND = {
   color: '#12233B',      // navy — primary actions
   colorDark: '#0E2138',  // navy, pressed
   accent: '#FCA429',     // amber — the sparkle in the mark
-  supportEmail: 'support@omryus.example',
-  privacyUrl: 'https://omryus.example/privacy.html',
-  siteUrl: 'https://omryus.example',
+  supportEmail: 'support@omryus.com',
+  privacyUrl: 'https://omryus.com/privacy.html',
+  siteUrl: 'https://omryus.com',
 };
 
 /**

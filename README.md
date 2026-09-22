@@ -302,8 +302,9 @@ late-rendering, shadow DOM, no-coupon-box, and a non-cart page that should stay 
 `site/` is five static files — landing page, privacy policy, the donation ledger, the stylesheet
 and the icon. No build step, no framework. Any host works:
 
-- **GitHub Pages** — live at <https://omarahmed2enty9ty9-oss.github.io/omryus/>.
-  Pages serves the `gh-pages` branch, which holds the contents of `site/`. Redeploy with:
+- **GitHub Pages** — live at <https://omryus.com>. Pages serves the `gh-pages` branch, which
+  holds the contents of `site/`; `site/CNAME` carries the custom domain across deploys, so don't
+  delete it. DNS is on Cloudflare, records set to DNS only (grey cloud). Redeploy with:
 
   ```bash
   npm run deploy
@@ -314,9 +315,6 @@ and the icon. No build step, no framework. Any host works:
   no such dependency. Switch to Actions later if you want to.
 - **Netlify / Cloudflare Pages** — drag the `site/` folder in, or connect the repo with publish
   directory `site` and no build command.
-
-Update `privacyUrl` and `siteUrl` in `extension/src/shared/brand.js` once you have a real domain,
-and search `site/` for `omryus.example` — the contact addresses need the same change.
 
 `donations.html` is the public ledger. It currently says nothing has been donated, which is true.
 Do not make a donation claim anywhere — site, store listing or extension — without keeping it

@@ -10,7 +10,7 @@ Read `README.md` for how things work; this file is only what you can't infer fro
 | | |
 |---|---|
 | Repo | https://github.com/omarahmed2enty9ty9-oss/omryus (public) |
-| Site | https://omarahmed2enty9ty9-oss.github.io/omryus/ — **live** |
+| Site | https://omryus.com — **live** (GitHub Pages; DNS on Cloudflare, records DNS only) |
 | Deploy | `npm run deploy` (pushes `site/` to the `gh-pages` branch) |
 | Tests | `npm test` — 63 passing |
 | Extension | Builds to `dist/` with `npm run build`; `npm run chrome` launches it |
@@ -60,20 +60,19 @@ commission on codes that do discount something is the revenue model. There's a t
 
 | Waiting on | For | Status |
 |---|---|---|
-| **A domain** | Everything below | **Not bought. This is now the top blocker — see below.** |
 | Awin | Per-advertiser opt-in | Publisher account live: **ID 3102715**, 0 programmes joined |
 | impact.com | Partner approval | **DECLINED 22 Sep**, account 7826308 — appealable |
 | A charity | Written agreement before naming them | Draft email in Gmail, unsent |
 | Chrome Web Store | Listing approval | Not submitted |
 
-### The domain is the blocker
+### impact.com: reapply now the domain exists
 
-The site is on `omarahmed2enty9ty9-oss.github.io`. impact.com declined the application
+The site used to be on `omarahmed2enty9ty9-oss.github.io`. impact.com declined the application
 **eleven minutes** after acknowledging it — an automated filter, not a human — and the most
 likely trigger is a free subdomain with no traffic or history. Their Media Partner Service
 Agreement (the only "reason" given) does **not** prohibit browser extensions, plugins, toolbars or
 coupon publishers; it bans adware, cookie stuffing and fake redirects, none of which apply. So the
-rejection was on signals, not substance. Buy a domain and reapply.
+rejection was on signals, not substance. `omryus.com` was bought and live on 22 Sep — reapply.
 
 ### Awin: the attribution problem
 
@@ -120,13 +119,12 @@ realistic early wins: code attribution is native and they are likelier to say ye
 
 ### 1. The website
 
-Live and presentable, but carrying placeholders.
+Live on omryus.com.
 
-- **`omryus.example` appears in 4 files** (`site/index.html`, `site/privacy.html`,
-  `site/donations.html`, `extension/src/shared/brand.js`). Contact links are dead addresses. The
-  user chose to leave these until a domain exists — don't "fix" them with a guess.
-- **No custom domain — this already cost an impact.com application.** Buy one, point Pages at it
-  with a CNAME, then reapply to Impact.
+- **`support@omryus.com` has no MX records**, so mail to it bounces — and `privacy.html` names it
+  as the contact for data requests. Set up Cloudflare Email Routing to forward it to a real inbox.
+- **`site/CNAME` holds the custom domain.** Deleting it makes Pages drop `omryus.com` on the next
+  deploy. Keep the Cloudflare records grey-cloud (DNS only); proxying them breaks Pages' cert.
 - **The site now carries impact.com's tracking tag**, consent-gated by `site/consent.js`. It ships
   as `<script type="text/plain" data-consent="impact">` so the network can still verify ownership
   by finding it in the source, but it stays inert until someone accepts. Do not make it fire
