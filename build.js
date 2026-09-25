@@ -10,32 +10,22 @@ import { build, context } from 'esbuild';
 import { cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { contentScriptMatches, loadOffers } from './extension/src/shared/offers.js';
 
 const root = dirname(fileURLToPath(import.meta.url));
 const src = resolve(root, 'extension');
 const out = resolve(root, 'dist');
 const watch = process.argv.includes('--watch');
 
-/** "shop.com" -> https on the domain and its subdomains. localhost stays http. */
-function matchPatternsFor(domain) {
-  const d = domain.toLowerCase().replace(/^www\./, '');
-  if (d === 'localhost' || d.endsWith('.localhost')) return [`http://${d}/*`];
-  return [`https://${d}/*`, `https://*.${d}/*`];
-}
-
 async function generateManifest() {
   const template = JSON.parse(await readFile(resolve(src, 'manifest.template.json'), 'utf8'));
-  const offers = JSON.parse(await readFile(resolve(src, 'src/data/offers.json'), 'utf8'));
+  const { offers } = loadOffers(JSON.parse(await readFile(resolve(src, 'src/data/offers.json'), 'utf8')));
 
-  // Only offers that can actually fire. We do not ask for access to a site
-  // whose offer is switched off or already expired.
-  const now = Date.now();
-  const usable = offers.filter((o) => o?.active !== false && !(o?.expiresAt && Date.parse(o.expiresAt) < now));
-  const patterns = [...new Set(usable.flatMap((o) => (o?.merchant?.domains ?? []).flatMap(matchPatternsFor)))].sort();
-  if (patterns.length === 0) throw new Error('offers.json produced no host patterns — refusing to build');
-
+  // The stores that work out of the box, for everyone. Stores added later come
+  // from the downloaded list and need the optional "shops you visit" grant.
+  // The content script itself is registered at runtime by the service worker.
+  const patterns = contentScriptMatches(offers);
   template.host_permissions = patterns;
-  template.content_scripts[0].matches = patterns;
   await writeFile(resolve(out, 'manifest.json'), JSON.stringify(template, null, 2));
   console.log(`manifest: ${patterns.length} host pattern(s)`);
 }

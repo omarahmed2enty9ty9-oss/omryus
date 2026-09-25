@@ -111,6 +111,23 @@ export function isOfferLive(offer, now = Date.now()) {
   return true;
 }
 
+/** "shop.com" -> https on the domain and its subdomains. localhost stays http. */
+export function matchPatternsFor(domain) {
+  const d = normaliseHostname(domain);
+  if (d === 'localhost' || d.endsWith('.localhost')) return [`http://${d}/*`];
+  return [`https://${d}/*`, `https://*.${d}/*`];
+}
+
+/**
+ * Where the content script may run: every store with a live offer, and nothing
+ * else. The manifest's host permissions and the runtime script registration are
+ * both built from this, so the extension never loads on a site without a code.
+ */
+export function contentScriptMatches(offers, now = Date.now()) {
+  const live = offers.filter((offer) => isOfferLive(offer, now));
+  return [...new Set(live.flatMap((offer) => offer.merchant.domains.flatMap(matchPatternsFor)))].sort();
+}
+
 /**
  * Every live offer for this URL, in file order.
  *

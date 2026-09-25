@@ -6,16 +6,71 @@
  * the code?". Keeping the rules here means swapping offers.json for an API
  * later does not touch any page-facing code.
  */
-import { findOffersForUrl, isDonationOffer } from '../shared/offers.js';
-import { LocalOfferSource } from './offer-source.js';
+import { contentScriptMatches, findOffersForUrl, isDonationOffer } from '../shared/offers.js';
+import { OfferSource } from './offer-source.js';
 import { resolveAttribution } from './affiliate.js';
 import { track } from './analytics.js';
 
-const offerSource = new LocalOfferSource();
+const offerSource = new OfferSource();
+const SCRIPT_ID = 'omryus-checkout';
+const REFRESH_ALARM = 'refresh-offers';
+
+/**
+ * Run the content script on exactly the stores in the current list that we have
+ * permission for. The broad "shops you visit" grant is optional, and even with
+ * it the script is registered only for stores with a live offer, so on every
+ * other site the extension is not loaded at all. Re-run whenever the list or
+ * the permissions change.
+ */
+async function registerContentScript() {
+  const allowed = [];
+  for (const pattern of contentScriptMatches(await offerSource.getOffers())) {
+    if (await chrome.permissions.contains({ origins: [pattern] })) allowed.push(pattern);
+  }
+  const [existing] = await chrome.scripting.getRegisteredContentScripts({ ids: [SCRIPT_ID] });
+  if (allowed.length === 0) {
+    if (existing) await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
+    return;
+  }
+  const script = { id: SCRIPT_ID, matches: allowed, js: ['content.js'], runAt: 'document_idle', allFrames: false };
+  if (existing) await chrome.scripting.updateContentScripts([script]);
+  else await chrome.scripting.registerContentScripts([script]);
+}
+
+async function refreshOffers() {
+  try {
+    await offerSource.refresh();
+  } catch (error) {
+    console.warn('[Omryus] offer list not refreshed, keeping the last good copy:', String(error));
+  }
+  await registerContentScript();
+}
+
+/** Alarms can be cleared when the browser restarts, so this runs at every startup. */
+async function ensureRefreshAlarm() {
+  if (!(await chrome.alarms.get(REFRESH_ALARM))) {
+    await chrome.alarms.create(REFRESH_ALARM, { periodInMinutes: 12 * 60 });
+  }
+}
 
 chrome.runtime.onInstalled.addListener((details) => {
-  if (details.reason === 'install') track('extension_installed');
+  if (details.reason === 'install') {
+    track('extension_installed');
+    // Onboarding: the one-time "shops you visit" choice lives on the settings page.
+    chrome.runtime.openOptionsPage();
+  }
+  ensureRefreshAlarm();
+  refreshOffers();
 });
+chrome.runtime.onStartup.addListener(() => {
+  ensureRefreshAlarm();
+  refreshOffers();
+});
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === REFRESH_ALARM) refreshOffers();
+});
+chrome.permissions.onAdded.addListener(() => registerContentScript());
+chrome.permissions.onRemoved.addListener(() => registerContentScript());
 
 /**
  * Find a usable offer for a URL, or null.

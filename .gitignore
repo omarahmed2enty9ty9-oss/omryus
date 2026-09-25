@@ -12,3 +12,6 @@ brag-output-*/
 .env
 .env.*
 !.env.example
+
+# Wrangler cache
+.wrangler/

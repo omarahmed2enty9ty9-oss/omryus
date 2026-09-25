@@ -1,0 +1,9 @@
+// api.omryus.com: the offer list the extension downloads (api/offers.json).
+// Kept apart from the website (Kane's omryus-site Worker) so a site deploy can
+// never break code delivery. Publish a change with: npm run deploy:api
+{
+  "name": "omryus-api",
+  "compatibility_date": "2026-09-25",
+  "assets": { "directory": "./api" },
+  "routes": [{ "pattern": "api.omryus.com", "custom_domain": true }]
+}

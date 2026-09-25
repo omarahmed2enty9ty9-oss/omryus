@@ -11,7 +11,7 @@
     "mock": "node mock-store/server.js",
     "test": "node --test test/*.test.js",
     "chrome": "node tools/launch-chrome.js",
-    "deploy": "git subtree push --prefix site origin gh-pages",
+    "deploy:api": "npx --yes wrangler@4 deploy",
     "logos": "node tools/make-logos.js"
   },
   "devDependencies": {

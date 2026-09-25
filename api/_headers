@@ -1,0 +1,6 @@
+# The extension's offer list: public, identical for everyone, readable from the
+# extension without extra permissions. Short cache so a new code spreads quickly.
+/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
+  X-Content-Type-Options: nosniff

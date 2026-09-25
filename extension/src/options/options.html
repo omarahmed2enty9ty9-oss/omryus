@@ -16,6 +16,17 @@
   <header><strong>Omryus settings</strong></header>
 
   <section>
+    <h2>Shops</h2>
+    <p class="muted">Omryus works on the shops it came with. Allow it on the shops you visit and new
+      partner shops start working as soon as we add them, with no update to install.</p>
+    <p class="muted">Chrome describes this permission in broad terms, because it has no way to say
+      "only shops with a code". Omryus still runs only on shops we have a code for, and is not loaded
+      on any other site.</p>
+    <button id="shops-toggle">Allow on shops I visit</button>
+    <p class="muted" id="shops-state"></p>
+  </section>
+
+  <section>
     <h2>Local counters</h2>
     <label>
       <input type="checkbox" id="analytics" />
@@ -29,10 +40,11 @@
   <section>
     <h2>What Omryus can see</h2>
     <ul>
-      <li>The address of pages on stores we have an offer for — and no others.</li>
+      <li>The address of pages on stores we have an offer for, and no others.</li>
       <li>Whether a discount box exists on that page.</li>
       <li>Nothing else. We never read what you type, your basket, your card details or your password.</li>
-      <li>No page content ever leaves your browser. Omryus has no server.</li>
+      <li>No page content ever leaves your browser. The only thing Omryus downloads is the current
+        list of codes: the same file for everyone, fetched twice a day, carrying nothing about you.</li>
     </ul>
   </section>
 
@@ -40,7 +52,7 @@
     <h2>Affiliate disclosure</h2>
     <p class="muted">Omryus inserts a discount code only after you click
       <strong>Apply discount</strong>. Where a partner programme allows it, using the code
-      supports us — at no extra cost to you. We never overwrite a referral or affiliate
+      supports us, at no extra cost to you. We never overwrite a referral or affiliate
       attribution that already belongs to somebody else.</p>
     <p class="muted">Some partner codes carry no discount at all. We will never present one of
       those as a saving. We offer them only as donations: if you choose to add one, the whole
@@ -50,7 +62,7 @@
     <p class="muted">To be plain about the rest: when a code <em>does</em> save you money, we do
       keep that commission. That is how Omryus stays free. The donation applies specifically to
       codes that gave you nothing.</p>
-    <p class="muted">Donations are forwarded by us, not sent automatically by the store —
+    <p class="muted">Donations are forwarded by us, not sent automatically by the store:
       commission reaches our account first. We publish what was sent.</p>
     <p class="muted"><strong>The codes shipped today are clearly-labelled mock data.</strong>
       We have no real partnerships yet.</p>

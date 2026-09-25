@@ -9,6 +9,29 @@ charityLink.textContent = DONATION.agreed ? DONATION.charity : 'a charity, named
 if (DONATION.agreed) charityLink.href = DONATION.url;
 else charityLink.removeAttribute('href');
 
+// The optional "shops you visit" grant. The service worker listens for the
+// permission change and re-registers the content script itself.
+const SHOPS = { origins: ['https://*/*'] };
+const shopsToggle = document.getElementById('shops-toggle');
+const shopsState = document.getElementById('shops-state');
+let shopsAllowed = false;
+
+async function renderShops() {
+  shopsAllowed = await chrome.permissions.contains(SHOPS);
+  shopsToggle.textContent = shopsAllowed ? 'Stop running on new shops' : 'Allow on shops I visit';
+  shopsState.textContent = shopsAllowed
+    ? 'On. New partner shops start working automatically.'
+    : 'Off. Omryus works on the shops it came with.';
+}
+
+// No await before request(): Chrome only allows it inside the click itself.
+shopsToggle.addEventListener('click', () => {
+  const change = shopsAllowed ? chrome.permissions.remove(SHOPS) : chrome.permissions.request(SHOPS);
+  change.then(renderShops, renderShops);
+});
+
+renderShops();
+
 const checkbox = document.getElementById('analytics');
 const countsEl = document.getElementById('counts');
 
