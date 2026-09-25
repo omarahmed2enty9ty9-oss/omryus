@@ -10,8 +10,8 @@ Read `README.md` for how things work; this file is only what you can't infer fro
 | | |
 |---|---|
 | Repo | https://github.com/omarahmed2enty9ty9-oss/omryus (public) |
-| Site | https://omryus.com — **live** (GitHub Pages; DNS on Cloudflare, records DNS only) |
-| Deploy | `npm run deploy` (pushes `site/` to the `gh-pages` branch) |
+| Site | https://omryus.com — **live**. Kane's rebuild, Cloudflare Worker `omryus-site` (25 Sep). Its source is with Kane, not in this repo |
+| Offer list | https://api.omryus.com/offers.json — Worker `omryus-api`. Edit `api/offers.json`, then `npm run deploy:api` |
 | Tests | `npm test` — 63 passing |
 | Extension | Builds to `dist/` with `npm run build`; `npm run chrome` launches it |
 | Teaser video | `brag-output-2026-09-21-121428/brag.mp4` (gitignored) |
@@ -60,9 +60,9 @@ commission on codes that do discount something is the revenue model. There's a t
 
 | Waiting on | For | Status |
 |---|---|---|
-| Awin | Per-advertiser opt-in | Publisher account live: **ID 3102715**, 0 programmes joined |
-| impact.com | Partner approval | **DECLINED 22 Sep**, account 7826308 — appealable |
-| A charity | Written agreement before naming them | Draft email in Gmail, unsent |
+| Awin | Per-advertiser opt-in | Publisher account live: **ID 3102715**. Joined SAILO (boat rental, US) 24 Sep, but its terms §8.5 ban shopping-assistant add-ons and it publishes 0 offers: not usable without written permission |
+| impact.com | Partner approval | **DECLINED 22 Sep**, account 7826308. Appeal via dashboard Help → Tickets |
+| A charity | Written agreement before naming them | Permission request sent 22 Sep, awaiting reply. `DONATION.agreed` stays `false` until signed |
 | Chrome Web Store | Listing approval | Not submitted |
 
 ### impact.com: reapply now the domain exists
@@ -125,16 +125,22 @@ Live on omryus.com.
   Gmail (receive only). Sending uses Gmail's "Send mail as" through `smtp.gmail.com`, so outgoing
   mail is DKIM-signed by gmail.com, not omryus.com. **Don't add a strict DMARC policy**
   (`p=quarantine`/`reject`) — it would bounce those replies. A real mailbox is the upgrade path.
-- **`site/CNAME` holds the custom domain.** Deleting it makes Pages drop `omryus.com` on the next
-  deploy. Keep the Cloudflare records grey-cloud (DNS only); proxying them breaks Pages' cert.
+- **Hosting changed on 25 Sep.** The live site is Kane's Worker `omryus-site`; his source is not in
+  this repo, so **`site/` here is the old site**, kept for reference. `test/donation-naming.test.js`
+  scans `site/`, so until Kane's source lands here that guard does not cover what is live.
+  GitHub Pages is off (the `gh-pages` branch was deleted; local backup at `refs/backup/gh-pages`).
+  An earlier Cloudflare hosting attempt is parked in `git stash` ("cloudflare-hosting"), superseded.
+- **Kane's site still needs, before the extension update below ships:** the privacy page says "The
+  extension has no server" and "makes no network requests whatsoever". Both become false once the
+  extension downloads the offer list. Also the homepage `<title>` has an em dash.
 - **Google Search Console** owns `omryus.com` as a Domain property, verified by a
   `google-site-verification=` TXT record on the apex. Removing that record drops the verification.
 - **SEO basics are in place:** canonical and Open Graph tags on every page, `og.png` (1200×630),
   `sitemap.xml`, `robots.txt` (all crawlers allowed, AI bots included, on purpose), and
   Organization + WebSite JSON-LD on the homepage. Audited with `nurkamol/seo-audit` and
   `openairlabs/seo-aeo-audit`. The AEO tool's remaining asks (Wikidata entry, `sameAs` profiles,
-  `llms.txt`) were declined: none exist yet and faking them is score-chasing. Security headers
-  can't be set on GitHub Pages.
+  `llms.txt`) were declined: none exist yet and faking them is score-chasing. (This was the old
+  site; Kane's keeps canonical tags, sitemap and robots, and sets its own security headers.)
 - **The site now carries impact.com's tracking tag**, consent-gated by `site/consent.js`. It ships
   as `<script type="text/plain" data-consent="impact">` so the network can still verify ownership
   by finding it in the source, but it stays inert until someone accepts. Do not make it fire
@@ -145,19 +151,26 @@ Live on omryus.com.
   distinction if you touch the copy.
 - **Supported stores section** says "None yet, and we won't pretend otherwise." Keep it that way
   until real partnerships exist.
-- Possible work: Open Graph / Twitter card tags (there are none, so shared links look bare), a
-  favicon check across browsers, and the donations ledger table once there's anything to put in it.
 
 ### 2. The extension
 
-- **Remote offer source.** `LocalOfferSource` → `RemoteOfferSource` in
-  `background/offer-source.js` is a one-file change, and MV3 permits fetching remote *data* (not
-  code). **Do not build this before at least one merchant opt-in exists** — what Awin's Offers API
-  actually returns should shape the schema, and building for imagined data means migrating twice.
-- **The `host_permissions` gap.** They're generated from `offers.json` at build time, so a remote
-  database still can't add a *new merchant domain* without a manifest change and a store review.
-  The fix is `optional_host_permissions` requested per-site on a user gesture. Compliant, but a
-  later problem.
+- **Offers are downloaded (built 25 Sep, "option B").** `OfferSource` in
+  `background/offer-source.js` fetches `https://api.omryus.com/offers.json` every 12 hours
+  (`chrome.alarms`), validates it with `loadOffers()`, caches it in `chrome.storage.local`, and
+  layers it over the bundled `offers.json` (same id = replaced). A failed fetch keeps the last good
+  copy. The request is identical for everyone: no cookies, nothing about the user or the page.
+- **Where the content script runs.** It is no longer declared in the manifest. The service worker
+  registers it with `chrome.scripting` for exactly the stores in the current list that it has
+  permission for, and re-registers when the list or permissions change. Bundled stores are
+  `host_permissions`; newer ones need the optional `https://*/*` grant, offered once on the
+  settings page (opened on install, off by default). Even with the grant the script runs only on
+  stores with a live offer, so "not loaded anywhere else" stays true.
+- **Verified 25 Sep** in headless Chrome for Testing: onboarding page opens, registration covers
+  exactly the bundled stores, the 12-hour alarm exists, the list downloads from api.omryus.com,
+  the card shows on the mock cart and not elsewhere. Not yet tested: granting the optional
+  permission (Chrome's prompt needs a real click).
+- **Next for offers:** the Cloudflare sync job (network APIs → `api/offers.json` or KV) once a
+  network actually supplies an extension-approved code.
 - **Known limitations, all documented in README:** no SPA route detection (cart reached without a
   page load shows no card), no iframe support (`all_frames: false`, deliberate — it stopped
   duplicate cards), closed shadow roots unreachable.
@@ -190,9 +203,6 @@ Do not apply to five networks at once. Learn what one asks for, then scale the p
   because the full mark is illegible at 16px. `mark-small.svg` carries its own
   `prefers-color-scheme` block and inverts on dark grounds. Regenerate PNGs with `npm run icons`
   (renders through Chrome; ImageMagick lacks librsvg here and silently mangles the output).
-- **GitHub Actions would not register a workflow on this account** — valid YAML, default branch,
-  Actions enabled, workflows endpoint empty. Hence the `gh-pages` branch deploy. Retry Actions
-  later if you want, but don't assume the workflow file was wrong.
 - **The teaser video leads with charity, not with the category.** An earlier cut opened on "free
   coupon extensions make money somehow" and read as promoting extension-building rather than the
   product. Don't go back to that framing.

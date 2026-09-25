@@ -110,6 +110,7 @@ touch the manifest, HTML or `offers.json`).
 | `npm test` | Runs the test suite (`node --test`, 46 tests) |
 | `npm run mock` | Serves the test checkout pages on <http://localhost:8642> |
 | `npm run icons` | Rasterises the logo SVGs into the PNG sizes Chrome needs |
+| `npm run deploy:api` | Publishes `api/offers.json` to api.omryus.com |
 
 ---
 
@@ -227,19 +228,19 @@ list of causes in Settings is the fix.
 
 ### Adding a merchant
 
-1. Add an object to `offers.json`.
-2. `npm run build` — this regenerates the manifest's `host_permissions` and content-script
-   `matches` from the domains in that file.
-3. `npm test` — one test validates the shipped `offers.json`.
-4. Reload the extension.
+There are two lists, and most changes only touch the first:
 
-Nothing else in the codebase mentions a specific merchant.
+- **`api/offers.json`, the live list.** Add or edit an offer, then `npm run deploy:api`. Every
+  install picks it up within 12 hours, with nothing for the user to do. That covers new codes,
+  changed selectors, expiry, switching an offer off, and **new stores** for anyone who allowed
+  Omryus on the shops they visit (the optional permission offered on the settings page).
+- **`extension/src/data/offers.json`, the bundled list.** Ships inside the extension, works
+  without the optional permission, and is the fallback before the first download. Changing it
+  means `npm run build` (which regenerates `host_permissions` from its domains) and a Chrome Web
+  Store release.
 
-**The one catch:** a brand-new *domain* changes the manifest, so it needs a Chrome Web Store update
-(a review, typically a few days). Changing an existing offer's code, expiry, selectors or on/off
-switch is just data. This is the price of not requesting access to every website you visit, and
-it's the right trade. When offers move to an API (see ARCHITECTURE.md), offer *content* updates
-instantly and only new domains still need a release.
+`npm test` validates the bundled list; the downloaded one goes through the same validation at
+runtime, and invalid entries are dropped. Nothing else in the codebase mentions a specific merchant.
 
 ### Finding the right selectors
 
@@ -297,24 +298,20 @@ late-rendering, shadow DOM, no-coupon-box, and a non-cart page that should stay 
 
 ---
 
-## Deploying the landing page
+## The website and the offer list
 
-`site/` is five static files — landing page, privacy policy, the donation ledger, the stylesheet
-and the icon. No build step, no framework. Any host works:
-
-- **GitHub Pages** — live at <https://omryus.com>. Pages serves the `gh-pages` branch, which
-  holds the contents of `site/`; `site/CNAME` carries the custom domain across deploys, so don't
-  delete it. DNS is on Cloudflare, records set to DNS only (grey cloud). Redeploy with:
+- **The website** (<https://omryus.com>) is Kane's rebuild, served by the Cloudflare Worker
+  `omryus-site`. Its source is not in this repo yet; `site/` here is the previous version, kept for
+  reference. GitHub Pages is no longer used.
+- **The offer list** (<https://api.omryus.com/offers.json>) is the `api/` folder, served by the
+  Worker `omryus-api` (`wrangler.jsonc`). It is separate from the website on purpose, so a site
+  deploy can never break code delivery. Publish a change with:
 
   ```bash
-  npm run deploy
+  npm run deploy:api
   ```
 
-  (That is `git subtree push --prefix site origin gh-pages`.) A GitHub Actions workflow would be
-  tidier, but Actions would not register the workflow on this account, and a branch deploy has
-  no such dependency. Switch to Actions later if you want to.
-- **Netlify / Cloudflare Pages** — drag the `site/` folder in, or connect the repo with publish
-  directory `site` and no build command.
+  This needs `npx wrangler login` once, on an account with access to the Cloudflare account.
 
 `donations.html` is the public ledger. It currently says nothing has been donated, which is true.
 Do not make a donation claim anywhere — site, store listing or extension — without keeping it
